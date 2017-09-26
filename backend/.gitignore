@@ -1,0 +1,6 @@
+/build/
+/.apt_generated/
+/.gradle/
+/src/main/webapp/
+/webapp/
+**/*.log

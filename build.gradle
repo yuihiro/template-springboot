@@ -1,0 +1,194 @@
+import java.text.SimpleDateFormat
+
+ext {
+	appName="anyclick-air-intergrate"
+	appVersion="0.1.0"
+	appDebug=true
+	distDir="dist/"
+	frontDir="frontend"
+	backendDir="backend"
+	frontDistDir=frontDir+"/dist"
+	backendPublicDir=backendDir+"/webapp/public"
+	remoteWebDir="usr/local/blazeds/tomcat/webapps"
+	remoteHost="10.10.110.174"
+	remotePort="22"
+	remoteUser="root"
+	remotePassword="adminme00!"	
+}
+
+buildscript {
+	repositories {
+		mavenCentral()
+		maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}		
+	}
+	dependencies {  
+		classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
+		classpath 'commons-net:commons-net:3.3'
+		classpath 'org.hidetake:gradle-ssh-plugin:2.2.0'
+	}	
+}
+
+apply plugin: 'org.hidetake.ssh'
+apply plugin: 'com.moowork.gulp'
+
+node {
+    // version = '3.8.6'
+    // download = true
+}
+
+remotes {
+  web01 {
+    host = remoteHost
+    user = remotePort
+    password = remotePassword
+    knownHosts = allowAnyHosts
+  }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+}
+
+task show {
+	doFirst {
+		println appVersion
+		def stringSet = ["apple", "apple", "banana", "banana"]
+		println "size = ${stringSet.size()}"
+		stringSet.each { item ->
+			println item
+		}
+	}
+}
+
+task gulp() {
+	doLast {
+		def result = exec {
+			workingDir "${frontDir}"
+			commandLine = ['cmd', '/C', 'build.bat']
+			ignoreExitValue = true
+		}	
+	}
+}
+
+//task release(dependsOn:':backend:war') {
+task cleanPublic() {
+	doLast {
+		def emptyDirs = []
+		project.fileTree(dir: backendPublicDir).visit { 
+        def File f = it.file
+        if (f.isDirectory() ) {
+            def children = project.fileTree(f).filter { it.isFile() }.files
+            if (children.size() == 0) {
+                emptyDirs << f
+            }
+        }
+		emptyDirs.reverseEach { it.delete() }
+	    }	
+	}
+}
+
+task copyFront(dependsOn:['cleanPublic', 'gulp']) {
+	doLast {
+		copy {
+    		from file(frontDistDir)
+    		into file(backendPublicDir)
+    		//exclude('component', 'bower_component', 'node_modules')
+    	}
+		File valuesFile = file("${backendPublicDir}/public/bundle.js")
+		String content = valuesFile.getText('UTF-8')
+		content = content.replaceAll("http://localhost:9090/api", "api")
+		valuesFile.write(content, 'UTF-8')
+    }
+}
+
+task makeWar() {
+	if(project.hasProperty("gulprun")){
+		dependsOn 'updateProfile','copyFront',':backend:bootRepackage'
+	} else {
+		dependsOn 'updateProfile',':backend:bootRepackage'
+	}
+	doLast {
+		//project("backend").tasks.bootRepackage.execute()
+		def path = project("backend").buildDir.toString()+"/libs"
+		copy {
+    		into distDir
+    		from new File(path).listFiles()?.sort { -it.lastModified() }?.head()
+	    	// subprojects {
+    	 //    	from tasks.withType(War)
+	    	// }
+    	}
+    	tasks.renameWar.execute()
+	}
+}
+
+task renameWar() {
+	doLast {
+		copy {
+			def input = distDir+project.appName+"-"+appVersion+".war"
+ 			from input
+    		into distDir
+ 			rename(project.appName+"-"+appVersion+".war", project.appName+".war")
+ 		}
+	}
+}
+
+task uploadWar() {
+	doLast {
+  		ssh.run {
+    		session(remotes.web01) {
+    			def war = distDir+project.appName+".war" 
+				put from : war, into : remoteWebDir
+				//put from: new File('build/app').listFiles(), into: project.properties["dir"]
+				//executeSudo 'service tomcat restart'
+				//shell
+				//get
+				//remote
+		
+    		}
+    	}
+  	}
+}
+
+task updateProfile() {
+	doLast {
+		def file = "${backendDir}/src/main/resources/config.properties"
+		ant.propertyfile(file: file) {
+            entry(key: "name", value: appName)
+            entry(key: "version", value: appVersion)
+            entry(key: "debug", value: appDebug)
+            entry(key: "build-time", value: new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
+        }		
+
+		def profile = "test";
+		if(project.hasProperty('profile')) {
+			profile = project.profile;
+		}        
+
+        // file = "${backendDir}/src/main/resources/application-local.properties"
+        // ant.propertyfile(file: file) {
+        //     entry(key: "spring.resources.static-locations", value: "file:///${projectDir}/backend/webapp/public/")
+        // }
+	}
+}
+
+task run() {
+	doLast {
+		def profile = "test";
+		if(project.hasProperty('profile')) {
+			profile = project.profile;
+		}
+		println "active profile : ${profile}"
+		File file = new File("${backendDir}/build/libs").listFiles()?.sort { -it.lastModified() }?.head();
+		def param_path = "${file.getAbsolutePath()}"
+		def param_profile = "-Dspring.profiles.active=${profile}"
+		exec {
+			executable 'java'
+		 	args "-jar","${param_profile}","${param_path}"
+		}		
+	}
+}
+
+task makeRun(dependsOn:['makeWar','run']) {
+}

@@ -1,0 +1,17 @@
+dist/
+.gradle/
+log/
+backend/build/
+backend/webapp/
+backend/log/
+backend/build/
+backend/.gradle/
+frontend/
+frontend/dist/
+frontend/build/
+frontend/node_modules/
+frontend/bower_components/
+frontend/.tmp/
+frontend/.tmp/.history/
+frontend/.vscode/chrome/
+**/*.log

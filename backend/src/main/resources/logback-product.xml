@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- <include resource="org/springframework/boot/logging/logback/base.xml"/>  -->
+	
+	<property name="CONSOLE_LOG_PATTERN" value="%d{HH:mm:ss} %5p %-40.40logger{39} : %m%n%wex"/>
+
+	<conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  		<file>log/app.log</file>
+  		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    		<!-- rollover daily -->
+    		<fileNamePattern>log/app-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+    		<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+      <!-- or whenever the file size reaches 100MB -->
+		      <maxFileSize>10MB</maxFileSize>
+    		</timeBasedFileNamingAndTriggeringPolicy>
+  		</rollingPolicy>
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>	
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING" />
+	</root>
+	
+	<logger name="anyclick" level="INFO"/>
+	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.springframework.web" level="INFO"/>
+	<logger name="org.springframework.jdbc" level="INFO"/>
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="INFO"/>
+	
+  	<logger name="jdbc.sqlonly">
+    	<level value="info"/>
+  	</logger>	
+	
+	<logger name="jdbc.resultsettable" additivity="false">
+        <level value="info" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+  	<logger name="jdbc.sqltiming">
+    	  <level value="info"/>
+    	  <appender-ref ref="CONSOLE" />
+  	</logger>    
+
+    <logger name="jdbc.sqltiming" additivity="false">
+        <level value="info" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+	
+</configuration>
