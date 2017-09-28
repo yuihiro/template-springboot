@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import anyclick.wips.config.AppProperties;
 import anyclick.wips.repository.CommonRepository;
 import anyclick.wips.repository.ServerRepository;
+import anyclick.wips.util.CryptoUtil;
 
 @Service
 @Transactional
@@ -37,6 +39,8 @@ public class ServerService {
 	}
 
 	public int insertServer(Map<String, Object> $param) {
+		String key = CryptoUtil.encrypt($param.get("secretkey").toString(), AppProperties.CRYOTO_KEY);
+		$param.put("secretkey", key);
 		int result = repo.insertServer($param);
 		if (result > 0) {
 			common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 추가하였습니다.");
@@ -45,6 +49,8 @@ public class ServerService {
 	}
 
 	public int updateServer(Map<String, Object> $param) {
+		String key = CryptoUtil.encrypt($param.get("secretkey").toString(), AppProperties.CRYOTO_KEY);
+		$param.put("secretkey", key);
 		int result = repo.updateServer($param);
 		if (result > 0) {
 			common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 수정하였습니다.");

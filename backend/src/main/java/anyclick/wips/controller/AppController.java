@@ -3,7 +3,6 @@ package anyclick.wips.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,8 @@ import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.config.AppProperties;
 
 @RequestMapping("dev")
@@ -47,7 +48,7 @@ public class AppController implements ServletContextAware {
 	@GetMapping("info")
 	@ResponseBody
 	public Map info() throws IOException {
-		Map result = new HashMap<>();
+		Map result = Maps.newHashMap();
 		result.put("name", AppProperties.name);
 		result.put("version", AppProperties.version);
 		result.put("buildTime", AppProperties.buildTime);
@@ -60,16 +61,16 @@ public class AppController implements ServletContextAware {
 	public long test() throws Exception {
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MMM-dd");
 
-		Map a = new HashMap();
+		Map a = Maps.newHashMap();
 		a.put("label", "aa");
 		a.put("date", "2017-03-24");
 		List<Map> source = new ArrayList();
 		source.add(a);
-		a = new HashMap();
+		a = Maps.newHashMap();
 		a.put("label", "aa");
 		a.put("date", "2017-04-24");
 		source.add(a);
-		a = new HashMap();
+		a = Maps.newHashMap();
 		a.put("label", "bb");
 		a.put("date", "2017-02-24");
 		source.add(a);

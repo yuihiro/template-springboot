@@ -2,7 +2,6 @@ package anyclick.wips.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,6 +10,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Maps;
 
 public class DataUtil {
 
@@ -24,7 +25,7 @@ public class DataUtil {
 		Map vo = null;
 		String[] token = null;
 		for (String key : temp.keySet()) {
-			vo = new HashMap();
+			vo = Maps.newHashMap();
 			token = StringUtils.split(key, "|");
 			vo.put("id", token[0]);
 			vo.put("label", token[1]);
@@ -74,7 +75,7 @@ public class DataUtil {
 	static public Map<String, String> getAroundDate(List<Map> source) {
 		String max = source.stream().map(it -> it.get("date")).max(Comparator.comparing(String::valueOf)).get().toString();
 		String min = source.stream().map(it -> it.get("date")).min(Comparator.comparing(String::valueOf)).get().toString();
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		result.put("start", min);
 		result.put("end", max);
 		return result;

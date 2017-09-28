@@ -7,13 +7,15 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.util.DateUtil;
 
 public class MapMapper implements RowMapper {
 
 	@Override
 	public Map mapRow(ResultSet rs, int row) throws SQLException {
-		Map<String, Object> vo = new HashMap<String, Object>();
+		Map<String, Object> vo = Maps.newHashMap();
 		vo.put("server_id", rs.getInt("server_id"));
 		vo.put("server_name", rs.getString("server_name"));
 		vo.put("map_id", rs.getInt("map_id"));

@@ -1,6 +1,5 @@
 package anyclick.wips.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -40,11 +39,11 @@ public class StatusService {
 		long mng_cnt = random.nextInt(1000);
 		long rap_cnt = random.nextInt(1000);
 		long event_cnt = random.nextInt(1000);
-		Map status = new HashMap();
+		Map status = Maps.newHashMap();
 		status.put("mng_cnt", mng_cnt);
 		status.put("rap_cnt", rap_cnt);
 		status.put("event_cnt", event_cnt);
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		result.put("status_info", status);
 		result.put("server_data", server_repo.getServerList(Maps.newHashMap()));
 		Map param = Maps.newHashMap();

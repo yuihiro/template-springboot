@@ -2,7 +2,6 @@ package anyclick.wips.error;
 
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +14,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.google.common.collect.Maps;
+
 @ControllerAdvice
 public class GlobalExceptHandler {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@ExceptionHandler(AuthException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseBody
+	public Map auth(HttpServletRequest request, Exception ex) {
+		log.error("NO SESSION : " + ex.getMessage() + " / " + request.getRequestURL() + " / " + ex.toString());
+		String message = (ex.getMessage() != null) ? ex.getMessage() : ex.toString();
+		ex.printStackTrace();
+		Map result = Maps.newHashMap();
+		result.put("url", request.getRequestURL().toString());
+		result.put("message", message);
+		result.put("status", HttpStatus.UNAUTHORIZED);
+		return result;
+	}
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.CONFLICT)
@@ -27,7 +42,7 @@ public class GlobalExceptHandler {
 		log.error("EXCEPTION : " + ex.getMessage() + " / " + request.getRequestURL() + " / " + ex.toString());
 		String message = (ex.getMessage() != null) ? ex.getMessage() : ex.toString();
 		ex.printStackTrace();
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		result.put("url", request.getRequestURL().toString());
 		result.put("message", message);
 		result.put("status", HttpStatus.CONFLICT);

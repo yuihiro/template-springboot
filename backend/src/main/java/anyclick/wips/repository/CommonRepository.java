@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.common.collect.Maps;
 
-import anyclick.wips.error.ServiceException;
+import anyclick.wips.error.AuthException;
 
 @Repository
 public class CommonRepository {
@@ -35,7 +35,7 @@ public class CommonRepository {
 		HttpServletResponse response = attributes.getResponse();
 		HttpSession session = request.getSession(false);
 		if (session == null) {
-			throw new ServiceException("");
+			throw new AuthException("NO SESSION");
 		}
 		return session;
 	}

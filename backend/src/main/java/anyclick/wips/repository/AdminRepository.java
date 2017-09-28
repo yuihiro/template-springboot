@@ -1,7 +1,6 @@
 package anyclick.wips.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.google.common.collect.Maps;
 
 import anyclick.wips.repository.mapper.AdminMapper;
 import anyclick.wips.util.QueryUtil;
@@ -25,7 +26,7 @@ public class AdminRepository {
 
 	public Map getAdmin(String $id) {
 		String sql = "SELECT * FROM admin_user_tbl WHERE user_id = :user_id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("user_id", $id);
 		Map result = null;
 		try {
@@ -63,7 +64,7 @@ public class AdminRepository {
 	}
 
 	public int deleteAdmin(String $id) {
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("user_id", $id);
 		String sql = "DELETE FROM admin_user_tbl WHERE user_id = :user_id";
 		int result = 0;

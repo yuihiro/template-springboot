@@ -2,7 +2,6 @@ package anyclick.wips.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +12,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.data.Enums.MapperType;
 import anyclick.wips.repository.mapper.ServerMapper;
 import anyclick.wips.util.QueryUtil;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class ServerRepository {
 
@@ -35,7 +35,7 @@ public class ServerRepository {
 
 	public List getServerList(Map<String, Object> $param) {
 		String query = QueryUtil.getWhereQuery($param);
-		query += " ORDER BY name desc";
+		query += " ORDER BY status desc, name desc";
 		query += QueryUtil.getLimitQuery($param);
 		String sql = "SELECT * FROM server_info_tbl " + query;
 		List result = template.query(sql, $param, new ServerMapper(MapperType.LIST));
@@ -44,7 +44,7 @@ public class ServerRepository {
 
 	public Map getServer(long $id) {
 		String sql = "SELECT * FROM server_info_tbl WHERE server_id = :id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
 		Map result = null;
 		try {
@@ -80,11 +80,10 @@ public class ServerRepository {
 
 	public int deleteServer(long $id) {
 		String sql = "DELETE FROM server_info_tbl WHERE server_id = :id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
 		int result = 0;
 		result = template.update(sql, param);
 		return result;
 	}
-
 }

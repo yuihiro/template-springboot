@@ -3,7 +3,6 @@ package anyclick.wips.util;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
 
 public class Util {
 
@@ -34,7 +34,7 @@ public class Util {
 
 	public static Map getParameterMap(HttpServletRequest $request) {
 		Enumeration name_list = $request.getParameterNames();
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		while (name_list.hasMoreElements()) {
 			String name = name_list.nextElement().toString();
 			String value = $request.getParameter(name);
@@ -46,7 +46,7 @@ public class Util {
 	public static List getListFromEnum(Enum[] items) {
 		List result = new ArrayList();
 		for (Enum item : items) {
-			Map vo = new HashMap();
+			Map vo = Maps.newHashMap();
 			vo.put("label", item.name());
 			vo.put("value", item);
 			result.add(vo);
@@ -107,11 +107,6 @@ public class Util {
 			}
 		}
 		return false;
-	}
-
-	public static Map getEmptyMap() {
-		return new HashMap() {
-		};
 	}
 
 	public static String macToStr(Long mac_addr_number) {

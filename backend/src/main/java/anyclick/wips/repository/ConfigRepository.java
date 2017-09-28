@@ -1,6 +1,5 @@
 package anyclick.wips.repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import com.google.common.collect.Maps;
 import anyclick.wips.util.FileUtil;
 import anyclick.wips.util.Util;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class ConfigRepository {
 
@@ -31,7 +29,7 @@ public class ConfigRepository {
 	private Map getSystemConfig() {
 		String sql = "SELECT * FROM env_tbl";
 		List<Map<String, Object>> list = (List<Map<String, Object>>) template.queryForList(sql, Maps.newHashMap());
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		for (Map item : list) {
 			result.put(item.get("name"), Util.toHyphen(item.get("value")) + "|" + Util.toHyphen(item.get("kname")) + "|" + Util.toHyphen(item.get("seq")));
 		}

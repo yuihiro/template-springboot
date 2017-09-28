@@ -23,6 +23,44 @@ public class MapperHelper {
 		return label;
 	}
 
+	static public String commandType(int value) {
+		String label = "";
+		switch (value) {
+		case 1:
+			label = "프로파일";
+			break;
+		case 2:
+			label = "관리AP/RAP목록";
+			break;
+		default:
+			break;
+		}
+		return label;
+	}
+
+	static public String commandSubType(int value, int sub_type) {
+		String label = "";
+		switch (value) {
+		case 1:
+			if (sub_type == 1) {
+				label = "적용";
+			} else if (sub_type == 2) {
+				label = "수정";
+			} else if (sub_type == 3) {
+				label = "추가";
+			} else {
+				label = "삭제";
+			}
+			break;
+		case 2:
+			label = "LIST";
+			break;
+		default:
+			break;
+		}
+		return label;
+	}
+
 	static public String policyType(int value) {
 		String label = "";
 		switch (value) {
@@ -42,10 +80,10 @@ public class MapperHelper {
 		String label = "";
 		switch (value) {
 		case 0:
-			label = "미작동";
+			label = "OFF";
 			break;
 		case 1:
-			label = "작동";
+			label = "ON";
 			break;
 		default:
 			break;

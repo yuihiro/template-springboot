@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import anyclick.wips.service.PolicyService;
@@ -28,28 +27,29 @@ public class PolicyController {
 		return service.getProfileData();
 	}
 
-	@RequestMapping(value = "insertProfileInfo", method = RequestMethod.POST)
-	public int insert(@RequestBody Map<String, Object> $param) {
+	@RequestMapping(value = "insertProfile", method = RequestMethod.POST)
+	public long insert(@RequestBody Map<String, Object> $param) {
 		return service.insertProfile($param);
 	}
 
-	@RequestMapping(value = "updateProfileInfo", method = RequestMethod.POST)
-	public int update(@RequestBody Map<String, Object> $param) {
+	@RequestMapping(value = "updateProfile", method = RequestMethod.POST)
+	public long update(@RequestBody Map<String, Object> $param) {
 		return service.updateProfile($param);
 	}
 
-	@RequestMapping(value = "deletePolicyInfo", method = RequestMethod.POST)
+	@RequestMapping(value = "deletePolicy", method = RequestMethod.POST)
 	public int delete(@RequestBody Map<String, Object> $param) {
 		return service.deleteProfile($param);
 	}
 
-	@RequestMapping(value = "applyPolicyInfo", method = RequestMethod.POST)
-	public int apply(@RequestBody Map<String, Object> $param) {
+	@RequestMapping(value = "applyProfile", method = RequestMethod.POST)
+	public long apply(@RequestBody Map<String, Object> $param) {
 		return service.applyProfile($param);
 	}
 
 	@RequestMapping(value = "getPolicyProcess", method = RequestMethod.POST)
-	public List<Map> process(@RequestParam("id") long $id) {
-		return service.processProfile($id);
+	public List<Map> process(@RequestBody Map<String, Object> $param) {
+		long id = Long.parseLong($param.get("id").toString());
+		return service.processProfile(id);
 	}
 }

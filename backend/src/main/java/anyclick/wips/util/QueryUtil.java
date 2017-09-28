@@ -92,7 +92,7 @@ public class QueryUtil {
 		return sql;
 	}
 
-	static public String getTimeQuery(Map<String, Object> $param, String $time_column, String $sql) {
+	static public String getTimeQuery(Map<String, Object> $param, String $time_column, boolean $timestamp, String $sql) {
 		if ($param == null || $param.get("start_time") == null) {
 			return "";
 		}
@@ -107,8 +107,13 @@ public class QueryUtil {
 		String end_time = $param.get("end_time").toString();
 		Boolean isString = StringUtils.contains(start_time, "-") ? true : false;
 		if (isString) {
-			start_time = DateUtil.timeToLong(start_time, true);
-			end_time = DateUtil.timeToLong(end_time, false);
+			if ($timestamp) {
+				start_time = DateUtil.addTimeStr(start_time, true);
+				end_time = DateUtil.addTimeStr(end_time, false);
+			} else {
+				start_time = DateUtil.timeToLong(start_time, true);
+				end_time = DateUtil.timeToLong(end_time, false);
+			}
 		}
 		if (start_time != null && end_time != null) {
 			sql += " " + column + " BETWEEN '" + start_time + "' AND '" + end_time + "' ";

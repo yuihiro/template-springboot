@@ -11,6 +11,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import anyclick.wips.config.AppProperties;
 import anyclick.wips.config.annotation.AuthCheck;
+import anyclick.wips.error.AuthException;
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
@@ -29,8 +30,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		//sslCheckAnnotation = (sslCheckAnnotation == null) ? handlerMethod.getBeanType().getAnnotation(SslCheck.class) : sslCheckAnnotation;
 		if (annotation == null) {
 			if (request.getSession(false).getAttribute("id") == null) {
-				response.setStatus(401);
-				return false;
+				throw new AuthException("NO SESSION");
 			}
 		}
 		return super.preHandle(request, response, handler);

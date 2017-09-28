@@ -6,12 +6,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Maps;
 
 public class DateUtil {
 
@@ -27,7 +28,7 @@ public class DateUtil {
 		String start_time = date + " 00:00:00";
 		String end_time = date + " 23:59:59";
 
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, String> result = Maps.newHashMap();
 		result.put("start_time", start_time);
 		result.put("end_time", end_time);
 		return result;
@@ -39,6 +40,8 @@ public class DateUtil {
 	}
 
 	public static String timeToStr(Timestamp time) {
+		if (time == null)
+			return "-";
 		return second_sdf.format(time);
 	}
 

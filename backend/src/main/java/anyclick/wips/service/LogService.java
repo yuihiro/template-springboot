@@ -43,4 +43,16 @@ public class LogService {
 	public List getSystemLogList(Map<String, Object> $param) {
 		return repo.getSystemLogList($param);
 	}
+
+	public Long getPolicyLogListCnt(Map<String, Object> $param) {
+		return repo.getPolicyLogListCnt($param);
+	}
+
+	public List getPolicyLogList(Map<String, Object> $param) {
+		return repo.getPolicyLogList($param);
+	}
+
+	public List getPolicyDetailLogList(Map<String, Object> $param) {
+		return repo.getPolicyDetailLogList($param);
+	}
 }

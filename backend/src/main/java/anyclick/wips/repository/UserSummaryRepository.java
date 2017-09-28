@@ -1,6 +1,5 @@
 package anyclick.wips.repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.repository.mapper.SummaryMapper;
 import anyclick.wips.util.C3Util;
 import anyclick.wips.util.DataUtil;
-import anyclick.wips.util.GoogleChartUtil;
 import anyclick.wips.util.QueryUtil;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class UserSummaryRepository {
 
@@ -23,13 +22,13 @@ public class UserSummaryRepository {
 
 	public Map getUserSummaryByTime(Map<String, Object> $param) {
 		String query = QueryUtil.getWhereQuery($param);
-		query += QueryUtil.getTimeQuery($param, "AcctStartTime", query);
+		query += QueryUtil.getTimeQuery($param, "AcctStartTime", false, query);
 		String sql = "SELECT UserName as label, name as sub_label, COUNT(UserName) AS value, AcctStartTime AS date FROM radacct "
 				+ "LEFT JOIN user_tbl ON radacct.UserName = user_tbl.user_id  " + query + " ";
 		sql += "GROUP BY user_id, DATE_FORMAT(AcctStartTime,'%y-%m-%d') ";
 		List<Map> source = template.query(sql, $param, new SummaryMapper());
 
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		List date_lst = DataUtil.getDateList(source);
 		List<Map> summary = DataUtil.parseSummaryData(source);
 		List<Map> grid_data = DataUtil.parseGridData(source, summary, date_lst);

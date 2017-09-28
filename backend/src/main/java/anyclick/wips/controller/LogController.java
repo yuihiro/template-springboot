@@ -52,4 +52,19 @@ public class LogController {
 		return service.getSystemLogList($param);
 	}
 
+	@PostMapping("getPolicyLogListCnt")
+	public Long getPolicyLogListCnt(@RequestBody Map<String, Object> $param) {
+		return service.getPolicyLogListCnt($param);
+	}
+
+	@PostMapping("getPolicyLogList")
+	public List getPolicyLogList(@RequestBody Map<String, Object> $param) {
+		return service.getPolicyLogList($param);
+	}
+
+	@PostMapping("getPolicyDetailLogList")
+	public List getPolicyDetailLogList(@RequestBody Map<String, Object> $param) {
+		return service.getPolicyDetailLogList($param);
+	}
+
 }

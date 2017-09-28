@@ -1,6 +1,5 @@
 package anyclick.wips.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +36,7 @@ public class MainService {
 	public static List<HttpSession> login_user_lst = Lists.newCopyOnWriteArrayList();
 
 	public Map login(String $id, String $pwd, HttpServletRequest $req) {
+		log.info($pwd);
 		String pwd = CryptoUtil.decrypt($pwd, AppProperties.CRYOTO_KEY);
 		Map login_data = null;
 		if ($id.equals(AppProperties.INIT_ID) && pwd.equals(AppProperties.INIT_PWD)) {
@@ -98,7 +98,7 @@ public class MainService {
 	}
 
 	public Map getAppData() {
-		Map result = new HashMap<String, Object>();
+		Map result = Maps.newHashMap();
 		List<Map> admin_lst = admin_repo.getAdminList(Maps.newHashMap(), "TINY");
 		result.put("admin_lst", admin_lst);
 		return result;

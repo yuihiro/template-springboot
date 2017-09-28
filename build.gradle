@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 
 ext {
-	appName="anyclick-air-intergrate"
+	appName="anyclick-wms"
 	appVersion="0.1.0"
 	appDebug=true
 	distDir="dist/"
@@ -62,13 +62,57 @@ task show {
 	}
 }
 
-task gulp() {
+task deployRemote {
+	doLast {
+		def project_name = project.name
+		def war_file = "${project.libsDir}/${project_name}.war"
+		def tomcat_home = '/usr/local/blazeds/tomcat'
+		ssh.run {
+			session(remotes.web_test) {
+				println "WAR파일전송"
+				put(war_file, tomcat_home)
+				excuteSudo("service tomcat stop")
+				excuteSudo("rm -rf ${tomcat_home}/webapps/${project_name}.war")
+				excuteSudo("rm -rf ${tomcat_home}/webapps/${project_name}")
+				excuteSudo("mv ${tomcat_home}/${project_name}.war ${tomcat_home}/wabapps/")
+				excuteSudo("service tomcat start")
+			}
+		}
+	}
+}
+
+task deployLocal() {
+	doLast {
+		def tomcat_home = '/usr/local/blazeds/tomcat'
+    	copy {
+      	from project.libsDir
+      	into "${tomcatHome}/webapps"
+      	include '*.war'
+    	}
+    }
+}
+
+task gulp_product() {
 	doLast {
 		def result = exec {
 			workingDir "${frontDir}"
 			commandLine = ['cmd', '/C', 'build.bat']
 			ignoreExitValue = true
 		}	
+	}
+}
+
+task unpack() {
+	doLast {
+  		def file = file("${distDir}/${project.appName}.war")
+  		println "헐"
+  		println file
+  		def dir = file("${distDir}/exploded")
+  		println(dir)
+  		copy { 
+  			from zipTree(file)
+  			into dir
+  		}
 	}
 }
 
@@ -89,25 +133,23 @@ task cleanPublic() {
 	}
 }
 
-task copyFront(dependsOn:['cleanPublic', 'gulp']) {
+task copyFront(dependsOn:['cleanPublic']) {
+//task copyFront(dependsOn:['cleanPublic', 'gulp_product']) {
 	doLast {
 		copy {
     		from file(frontDistDir)
     		into file(backendPublicDir)
     		//exclude('component', 'bower_component', 'node_modules')
     	}
-		File valuesFile = file("${backendPublicDir}/public/bundle.js")
-		String content = valuesFile.getText('UTF-8')
-		content = content.replaceAll("http://localhost:9090/api", "api")
-		valuesFile.write(content, 'UTF-8')
+    	tasks.updateBundle.execute();
     }
 }
 
 task makeWar() {
-	if(project.hasProperty("gulprun")){
-		dependsOn 'updateProfile','copyFront',':backend:bootRepackage'
+	if(project.hasProperty("front")){
+		dependsOn 'updateConfig', 'copyFront',':backend:bootRepackage'
 	} else {
-		dependsOn 'updateProfile',':backend:bootRepackage'
+		dependsOn 'updateConfig', ':backend:bootRepackage'
 	}
 	doLast {
 		//project("backend").tasks.bootRepackage.execute()
@@ -120,6 +162,9 @@ task makeWar() {
 	    	// }
     	}
     	tasks.renameWar.execute()
+    	tasks.updateProfile.execute()
+    	tasks.updateBundle.execute()
+    	// tasks.unpack.execute()
 	}
 }
 
@@ -151,7 +196,7 @@ task uploadWar() {
   	}
 }
 
-task updateProfile() {
+task updateConfig() {
 	doLast {
 		def file = "${backendDir}/src/main/resources/config.properties"
 		ant.propertyfile(file: file) {
@@ -161,7 +206,7 @@ task updateProfile() {
             entry(key: "build-time", value: new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
         }		
 
-		def profile = "test";
+		def profile = "server";
 		if(project.hasProperty('profile')) {
 			profile = project.profile;
 		}        
@@ -173,9 +218,27 @@ task updateProfile() {
 	}
 }
 
+task updateProfile() {
+	doLast {
+		File valuesFile = file("dist/exploded/WEB-INF/classes/application.properties")
+		String content = valuesFile.getText('UTF-8')
+		content = content.replaceAll("local", "server")
+		valuesFile.write(content, 'UTF-8')        
+	}
+}
+
+task updateBundle() {
+	doLast {
+		File valuesFile = file("dist/exploded/public/bundle.js")
+		String content = valuesFile.getText('UTF-8')
+		content = content.replaceAll("http://localhost:9090/api", "api")
+		valuesFile.write(content, 'UTF-8')	
+	}
+}
+
 task run() {
 	doLast {
-		def profile = "test";
+		def profile = "server";
 		if(project.hasProperty('profile')) {
 			profile = project.profile;
 		}

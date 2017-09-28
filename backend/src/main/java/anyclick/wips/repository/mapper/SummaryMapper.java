@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.util.DateUtil;
 
 public class SummaryMapper implements RowMapper {
@@ -16,7 +18,7 @@ public class SummaryMapper implements RowMapper {
 
 	@Override
 	public Map mapRow(ResultSet rs, int row) throws SQLException {
-		Map<String, Object> vo = new HashMap<String, Object>();
+		Map<String, Object> vo = Maps.newHashMap();
 		vo.put("id", rs.getString("label"));
 		vo.put("label", rs.getString("label") + "(" + rs.getString("sub_label") + ")");
 		vo.put("value", rs.getInt("value"));

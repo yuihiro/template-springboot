@@ -16,7 +16,7 @@ public class AppProperties {
 
 	public static final String INIT_ID = "anyclick";
 	public static final String INIT_PWD = "adminme00!";
-	public static final String CRYOTO_KEY = "ANYANGEL";
+	public static final String CRYOTO_KEY = "UNETANYANGEL";
 
 	public static final int SESSION_TIMEOUT = 10 * 60;
 

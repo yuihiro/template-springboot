@@ -1,6 +1,5 @@
 package anyclick.wips.error;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.google.common.collect.Maps;
+
 //@Controller
 public class GlobalErrorHandler implements ErrorController {
 
@@ -32,7 +33,7 @@ public class GlobalErrorHandler implements ErrorController {
 	Map error(HttpServletRequest request, HttpServletResponse response) {
 		Map info = getErrorAttributes(request, true);
 		log.error("ERROR : " + info.get("error"));
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		result.put("url", info.get("path"));
 		result.put("message", info.get("error"));
 		result.put("status", info.get("status"));

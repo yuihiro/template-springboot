@@ -64,6 +64,14 @@ war {
 	//exclude("build/**")
 }
 
+war.doLast {
+	ant.unzip(src: war.archivePath, dest: "${buildDir}/exploded")
+	copy {
+   		from file("${buildDir}/exploded")
+   		into file("../dist/exploded")
+   	}	
+}
+
 springBoot {
   	executable = true
 }

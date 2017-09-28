@@ -2,10 +2,11 @@ package anyclick.wips.repository.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
+
+import com.google.common.collect.Maps;
 
 import anyclick.wips.util.DateUtil;
 
@@ -13,8 +14,8 @@ public class ProfileMapper implements RowMapper {
 
 	@Override
 	public Map mapRow(ResultSet rs, int row) throws SQLException {
-		Map<String, Object> vo = new HashMap<String, Object>();
-		vo.put("id", rs.getLong("id"));
+		Map<String, Object> vo = Maps.newHashMap();
+		vo.put("id", rs.getLong("idx"));
 		vo.put("name", rs.getString("name"));
 		vo.put("server_id", rs.getInt("server_id"));
 		vo.put("server_profile_id", rs.getInt("server_profile_id"));

@@ -26,7 +26,6 @@ import anyclick.wips.repository.mapper.PolicyMapper;
 import anyclick.wips.repository.mapper.ProfileMapper;
 import anyclick.wips.util.QueryUtil;
 
-@SuppressWarnings("unchecked")
 @Repository
 public class PolicyRepository {
 
@@ -57,7 +56,7 @@ public class PolicyRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT *, server.name as server_name FROM map_info_tbl as map ");
 		sql.append("LEFT JOIN event_policy_profile_tbl as profile ");
-		sql.append("ON map.profile_id = profile.id ");
+		sql.append("ON map.profile_id = profile.idx ");
 		sql.append("LEFT JOIN server_info_tbl as server ");
 		sql.append("ON map.server_id = server.server_id ");
 		sql.append(query);
@@ -66,8 +65,8 @@ public class PolicyRepository {
 	}
 
 	public Map getProfile(long $id) {
-		String sql = "SELECT * FROM event_policy_profile_tbl WHERE id = :id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		String sql = "SELECT * FROM event_policy_profile_tbl WHERE idx = :id";
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
 		Map result = null;
 		try {
@@ -99,26 +98,26 @@ public class PolicyRepository {
 		sql.append("UPDATE event_policy_profile_tbl SET ");
 		sql.append(
 				"`name` = :name, `type` = :type, `use` = :use, `priority` = :priority, `alert` = :alert, `sound` = :sound, `mail` = :mail, `block` = :block, `cable_block` = :cable_block, `chg_time` = :chg_time ");
-		sql.append("WHERE id = :id");
+		sql.append("WHERE idx = :id");
 		return template.update(sql.toString(), $param);
 	}
 
 	public int deleteProfile(long $id) {
-		String sql = "DELETE FROM event_policy_profile_tbl WHERE id = :id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		String sql = "DELETE FROM event_policy_profile_tbl WHERE idx = :id";
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
 		int result = 0;
 		result = template.update(sql, param);
 		template.update("delete from event_policy_general_tbl where profile_idx = :id", param);
-		template.update("delete from general_vendor_policy where profile_idx = :id", param);
-		template.update("delete from policy_5_6_vendor_list where profile_idx = :id", param);
-		template.update("delete from policy_except_list where profile_idx = :id", param);
+		template.update("delete from general_vendor_policy where profile_id = :id", param);
+		template.update("delete from policy_5_6_vendor_list where profile_id = :id", param);
+		template.update("delete from policy_except_list where profile_id = :id", param);
 		return result;
 	}
 
 	public int deletePolicyList(long $id) {
-		String sql = "DELETE FROM event_policy_tbl WHERE profile_id = :profile_id";
-		Map<String, Object> param = new HashMap<String, Object>();
+		String sql = "DELETE FROM event_policy_tbl WHERE profile_idx = :profile_id";
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("profile_id", $id);
 		int result = 0;
 		result = template.update(sql, param);
@@ -138,12 +137,13 @@ public class PolicyRepository {
 		return sum;
 	}
 
-	public long insertPolicyCommand(int $type, long $id, String $name) {
+	public long insertPolicyCommand(int $type, int $status, long $id, String $name) {
 		KeyHolder key = new GeneratedKeyHolder();
 		Map param = Maps.newHashMap();
 		param.put("reg_time", new Timestamp(System.currentTimeMillis()));
 		param.put("type", 1);
 		param.put("sub_type", $type);
+		param.put("status", $status);
 		param.put("target", $id);
 		param.put("target_name", $name);
 		SqlParameterSource vo = new MapSqlParameterSource(param);
@@ -172,12 +172,25 @@ public class PolicyRepository {
 	}
 
 	public List getPolicyCommandStatus(long $id) {
-		Map<String, Object> param = new HashMap<String, Object>();
+		updatePolicyCommandStatus($id);
+		Map<String, Object> param = Maps.newHashMap();
 		param.put("command_id", $id);
+		param.put("status", 3);
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM command_profile_tbl WHERE command_id = :command_id AND status >= 3");
-		List result = template.query(sql.toString(), param, new CommandMapper());
+		sql.append("SELECT * FROM command_profile_tbl WHERE command_id = :command_id AND status >= :status");
+		List result = template.query(sql.toString(), param, new CommandMapper("PROFILE"));
 		return result;
+	}
+
+	public int updatePolicyCommandStatus(long $id) {
+		long idx = template.queryForObject("SELECT id FROM command_profile_tbl WHERE status < 3 AND command_id = " + $id + " LIMIT 1", Maps.newHashMap(), Long.class);
+
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("command_id", $id);
+		param.put("status", 3);
+		param.put("id", idx);
+		String sql = "UPDATE command_profile_tbl SET status = :status WHERE command_id = :command_id AND id = :id";
+		return template.update(sql, param);
 	}
 
 }

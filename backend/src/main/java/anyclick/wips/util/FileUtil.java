@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import com.google.common.collect.Maps;
+
 public class FileUtil {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -57,7 +59,7 @@ public class FileUtil {
 	}
 
 	static private Map getFile(String file) {
-		Map result = new HashMap();
+		Map result = Maps.newHashMap();
 		Path path = Paths.get("", file);
 		try {
 			List<String> lines = Files.readAllLines(path);

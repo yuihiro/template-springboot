@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import anyclick.wips.controller.view.DownloadView;
-import anyclick.wips.error.ServiceException;
+import anyclick.wips.error.AuthException;
 
 @RequestMapping(value = "api")
 @Controller
@@ -39,7 +39,7 @@ public class FileController {
 		String dir = context.getServletContext().getRealPath(DOWNLOAD_PATH);
 		File file = new File(dir, $file_name);
 		if (file.exists() == false) {
-			throw new ServiceException("파일이 존재하지않습니다.");
+			throw new AuthException("파일이 존재하지않습니다.");
 		}
 		return new ModelAndView(new DownloadView(), "file", file);
 	}
@@ -53,7 +53,7 @@ public class FileController {
 			stream.write($file.getBytes());
 			stream.close();
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage());
+			throw new AuthException(e.getMessage());
 		}
 	}
 }
