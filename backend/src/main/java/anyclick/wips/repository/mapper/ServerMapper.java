@@ -61,8 +61,8 @@ public class ServerMapper implements RowMapper {
 			m = 0;
 		}
 		vo.put("disk", Math.round(m) + "%");
-		vo.put("hw_version", rs.getInt("hw_version"));
-		vo.put("hw_version_str", rs.getString("hw_version_str"));
+		vo.put("svn_revision", rs.getInt("svn_revision"));
+		vo.put("server_version", Util.toHyphen(rs.getString("server_version")));
 		if (type == MapperType.LIST) {
 			return vo;
 		}

@@ -34,25 +34,19 @@ public class AdminService {
 
 	public int insertAdmin(Map<String, Object> $param) {
 		int result = repo.insertAdmin($param);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 추가하였습니다.");
-		}
+		common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 추가하였습니다.");
 		return result;
 	}
 
 	public int updateAdmin(Map<String, Object> $param) {
 		int result = repo.updateAdmin($param);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 수정하였습니다.");
-		}
+		common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 수정하였습니다.");
 		return result;
 	}
 
 	public int deleteAdmin(String $id) {
 		int result = repo.deleteAdmin($id);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "관리자(" + $id + ")를 삭제하였습니다.");
-		}
+		common_repo.updateAdminLog(3, "관리자(" + $id + ")를 삭제하였습니다.");
 		return result;
 	}
 }

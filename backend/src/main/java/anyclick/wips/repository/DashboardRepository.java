@@ -7,22 +7,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import anyclick.wips.repository.mapper.EventCntMapper;
 import anyclick.wips.repository.mapper.EventMapper;
 import anyclick.wips.util.QueryUtil;
 
 @Repository
-public class StatusRepository {
+public class DashboardRepository {
 
 	@Autowired
 	NamedParameterJdbcTemplate template;
 
-	public Map getStatsCnt(Map<String, Object> $param) {
-		String sql = "SELECT SUM(sensor_on_cnt) AS sensor_on_cnt, SUM(sensor_off_cnt) AS sensor_off_cnt, "
+	public List getStatsCnt(Map<String, Object> $param) {
+		String sql = "SELECT server_stats_tbl.server_id, `name`, SUM(sensor_on_cnt) AS sensor_on_cnt, SUM(sensor_off_cnt) AS sensor_off_cnt, "
 				+ "SUM(manage_ap_cnt) AS manage_ap_cnt, SUM(unmanage_ap_cnt) AS unmanage_ap_cnt, SUM(rogue_ap_cnt) AS rogue_ap_cnt, SUM(external_ap_cnt) AS external_ap_cnt, "
 				+ "SUM(manage_sta_cnt) AS manage_sta_cnt, SUM(unmanage_sta_cnt) AS unmanage_sta_cnt, SUM(external_sta_cnt) AS external_sta_cnt, "
 				+ "SUM(high_event_cnt) AS high_event_cnt, SUM(medium_event_cnt) AS medium_event_cnt, SUM(low_event_cnt) AS low_event_cnt, SUM(unconfirm_event_cnt) AS unconfirm_event_cnt "
-				+ "FROM server_stats_tbl";
-		Map result = template.queryForMap(sql, $param);
+				+ "FROM server_stats_tbl LEFT JOIN server_info_tbl ON server_info_tbl.server_id = server_stats_tbl.server_id GROUP BY server_stats_tbl.server_id ORDER BY server_stats_tbl.server_id";
+		List result = template.queryForList(sql, $param);
+		return result;
+	}
+
+	public List getEventCnt(Map<String, Object> $param) {
+		String sql = "SELECT * FROM dash_event_summary LEFT JOIN server_info_tbl ON server_info_tbl.server_id = dash_event_summary.server_id ORDER BY server_info_tbl.server_id, TYPE, sub_type";
+		List result = template.query(sql, $param, new EventCntMapper());
 		return result;
 	}
 

@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
@@ -56,6 +59,7 @@ public class ServerRepository {
 	}
 
 	public int insertServer(Map<String, Object> $param) {
+		KeyHolder key = new GeneratedKeyHolder();
 		$param.put("chg_time", new Date().getTime());
 		List<String> except = new ArrayList();
 		except.add("id");
@@ -64,7 +68,15 @@ public class ServerRepository {
 		$param.put("reg_time", new Date().getTime());
 		query = QueryUtil.getInsertQuery($param, except);
 		sql = "INSERT INTO server_info_tbl " + query;
-		return template.update(sql, $param);
+		int result = template.update(sql, new MapSqlParameterSource($param), key);
+		return key.getKey().intValue();
+	}
+
+	public int insertServerStats(int $id) {
+		Map param = Maps.newHashMap();
+		param.put("id", $id);
+		String sql = "INSERT INTO server_stats_tbl (server_id) VALUES (:id)";
+		return template.update(sql, param);
 	}
 
 	public int updateServer(Map<String, Object> $param) {
@@ -82,8 +94,15 @@ public class ServerRepository {
 		String sql = "DELETE FROM server_info_tbl WHERE server_id = :id";
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
-		int result = 0;
-		result = template.update(sql, param);
+		int result = template.update(sql, param);
+		return result;
+	}
+
+	public int deleteServerStats(long $id) {
+		String sql = "DELETE FROM server_stats_tbl WHERE server_id = :id";
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("id", $id);
+		int result = template.update(sql, param);
 		return result;
 	}
 }

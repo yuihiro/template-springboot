@@ -41,28 +41,24 @@ public class ServerService {
 	public int insertServer(Map<String, Object> $param) {
 		String key = CryptoUtil.encrypt($param.get("secretkey").toString(), AppProperties.CRYOTO_KEY);
 		$param.put("secretkey", key);
-		int result = repo.insertServer($param);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 추가하였습니다.");
-		}
-		return result;
+		int id = repo.insertServer($param);
+		repo.insertServerStats(id);
+		common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 추가하였습니다.");
+		return id;
 	}
 
 	public int updateServer(Map<String, Object> $param) {
 		String key = CryptoUtil.encrypt($param.get("secretkey").toString(), AppProperties.CRYOTO_KEY);
 		$param.put("secretkey", key);
 		int result = repo.updateServer($param);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 수정하였습니다.");
-		}
+		common_repo.updateAdminLog(3, "서버(" + $param.get("name").toString() + ")를 수정하였습니다.");
 		return result;
 	}
 
 	public int deleteServer(long $id) {
 		int result = repo.deleteServer($id);
-		if (result > 0) {
-			common_repo.updateAdminLog(3, "서버(" + $id + ")를 삭제하였습니다.");
-		}
+		repo.deleteServerStats($id);
+		common_repo.updateAdminLog(3, "서버(" + $id + ")를 삭제하였습니다.");
 		return result;
 	}
 
