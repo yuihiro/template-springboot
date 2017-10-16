@@ -27,6 +27,9 @@ targetCompatibility = 1.8
 repositories {
 	mavenCentral()
 	maven { url "https://repo.spring.io/libs-release" }
+ 	flatDir {
+        dirs 'lib'
+    }	
 }
 
 dependencies {
@@ -40,8 +43,10 @@ dependencies {
 	compile group: 'com.google.guava', name: 'guava', version: '21.0'
 	//compile('javax.servlet:jstl')
 	//compile('servlets.com:cos:05Nov2002')
+	compile group: 'org.snmp4j', name: 'snmp4j', version: '2.5.0'
 	compile group: 'com.opencsv', name: 'opencsv', version: '3.9'
 	compile group: 'net.sf.supercsv', name: 'super-csv', version: '2.4.0'
+	compile name: 'snmp-1.3'
 	runtime('mysql:mysql-connector-java')
 	providedRuntime('org.apache.tomcat.embed:tomcat-embed-jasper') 	
 	//providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')

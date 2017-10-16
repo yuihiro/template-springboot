@@ -43,24 +43,24 @@ public class ServerMapper implements RowMapper {
 		vo.put("status_str", MapperHelper.serverStatus(rs.getInt("status")));
 		vo.put("reg_time", DateUtil.timeToStr(rs.getLong("reg_time")));
 		vo.put("chg_time", DateUtil.timeToStr(rs.getLong("chg_time")));
-		vo.put("cpu", rs.getInt("cpu") + "%");
+		vo.put("cpu", rs.getInt("cpu"));
 		//vo.put("temperature", rs.getInt("temperature") + "°");
 		vo.put("mem_total", rs.getInt("mem_total"));
 		vo.put("mem_space", rs.getInt("mem_space"));
 
-		double m = (double) rs.getLong("mem_space") / rs.getLong("mem_total") * 100;
+		double m = (double) (rs.getLong("mem_total") - rs.getLong("mem_space")) / rs.getLong("mem_total") * 100;
 		if (Double.isNaN(m)) {
 			m = 0;
 		}
-		vo.put("memory", Math.round(m) + "%");
+		vo.put("memory", Math.round(m));
 		vo.put("disk_total", rs.getLong("disk_total"));
 		vo.put("disk_space", rs.getLong("disk_space"));
 
-		m = (double) rs.getLong("disk_space") / rs.getLong("disk_total") * 100;
+		m = (double) (rs.getLong("disk_total") - rs.getLong("disk_space")) / rs.getLong("disk_total") * 100;
 		if (Double.isNaN(m)) {
 			m = 0;
 		}
-		vo.put("disk", Math.round(m) + "%");
+		vo.put("disk", Math.round(m));
 		vo.put("svn_revision", rs.getInt("svn_revision"));
 		vo.put("server_version", Util.toHyphen(rs.getString("server_version")));
 		if (type == MapperType.LIST) {

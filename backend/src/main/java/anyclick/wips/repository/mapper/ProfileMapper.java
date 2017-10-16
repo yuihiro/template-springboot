@@ -31,6 +31,7 @@ public class ProfileMapper implements RowMapper {
 		vo.put("mail", rs.getInt("mail"));
 		vo.put("block", rs.getInt("block"));
 		vo.put("cable_block", rs.getInt("cable_block"));
+		vo.put("sort_order", (rs.getString("server_name") == null) ? "0" : 1);
 		return vo;
 	}
 }

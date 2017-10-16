@@ -2,6 +2,8 @@ package anyclick.wips.repository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ public class PolicyRepository {
 		sql.append("ON policy.server_id = server_info_tbl.server_id ");
 		sql.append("ORDER BY policy.server_id ");
 		List result = template.query(sql.toString(), new ProfileMapper());
+		Collections.sort(result, new sortCompare());
 		return result;
 	}
 
@@ -193,4 +196,11 @@ public class PolicyRepository {
 		return template.update(sql, param);
 	}
 
+	class sortCompare implements Comparator<Map> {
+
+		@Override
+		public int compare(Map arg0, Map arg1) {
+			return arg0.get("sort_order").toString().compareTo(arg1.get("sort_order").toString());
+		}
+	}
 }

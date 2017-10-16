@@ -105,4 +105,24 @@ public class ServerRepository {
 		int result = template.update(sql, param);
 		return result;
 	}
+
+	public int deleteServerMap(long $id) {
+		String sql = "DELETE FROM map_info_tbl WHERE server_id = :id";
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("id", $id);
+		int result = template.update(sql, param);
+		return result;
+	}
+
+	public int deleteServerPolicy(long $id) {
+		String sql = "DELETE FROM event_policy_tbl WHERE server_id = :id";
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("id", $id);
+		int result = template.update(sql, param);
+		sql = "DELETE FROM event_policy_profile_tbl WHERE server_id = :id";
+		template.update(sql, param);
+		sql = "DELETE FROM event_policy_general_tbl WHERE server_id = :id";
+		template.update(sql, param);
+		return result;
+	}
 }

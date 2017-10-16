@@ -58,6 +58,8 @@ public class ServerService {
 	public int deleteServer(long $id) {
 		int result = repo.deleteServer($id);
 		repo.deleteServerStats($id);
+		repo.deleteServerMap($id);
+		repo.deleteServerPolicy($id);
 		common_repo.updateAdminLog(3, "서버(" + $id + ")를 삭제하였습니다.");
 		return result;
 	}
