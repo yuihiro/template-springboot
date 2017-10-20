@@ -40,13 +40,13 @@ public class ServerRepository {
 		String query = QueryUtil.getWhereQuery($param);
 		query += " ORDER BY status desc, name desc";
 		query += QueryUtil.getLimitQuery($param);
-		String sql = "SELECT * FROM server_info_tbl " + query;
+		String sql = "SELECT * FROM server_info_tbl LEFT JOIN server_stats_tbl ON server_stats_tbl.server_id = server_info_tbl.server_id " + query;
 		List result = template.query(sql, $param, new ServerMapper(MapperType.LIST));
 		return result;
 	}
 
 	public Map getServer(long $id) {
-		String sql = "SELECT * FROM server_info_tbl WHERE server_id = :id";
+		String sql = "SELECT * FROM (SELECT * FROM server_info_tbl WHERE server_id = :id) as server_info_tbl LEFT JOIN server_stats_tbl ON server_stats_tbl.server_id = server_info_tbl.server_id";
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
 		Map result = null;

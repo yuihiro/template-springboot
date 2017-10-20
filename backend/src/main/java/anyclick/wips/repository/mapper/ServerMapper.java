@@ -63,9 +63,20 @@ public class ServerMapper implements RowMapper {
 		vo.put("disk", Math.round(m));
 		vo.put("svn_revision", rs.getInt("svn_revision"));
 		vo.put("server_version", Util.toHyphen(rs.getString("server_version")));
-		if (type == MapperType.LIST) {
-			return vo;
-		}
+		vo.put("sensor_cnt", rs.getInt("sensor_on_cnt") + rs.getInt("sensor_off_cnt"));
+		vo.put("sensor_on_cnt", rs.getInt("sensor_on_cnt"));
+		vo.put("sensor_off_cnt", rs.getInt("sensor_off_cnt"));
+		vo.put("manage_ap_cnt", rs.getInt("manage_ap_cnt"));
+		vo.put("unmanage_ap_cnt", rs.getInt("unmanage_ap_cnt"));
+		vo.put("rogue_ap_cnt", rs.getInt("rogue_ap_cnt"));
+		vo.put("external_ap_cnt", rs.getInt("external_ap_cnt"));
+		vo.put("manage_sta_cnt", rs.getInt("manage_sta_cnt"));
+		vo.put("unmanage_sta_cnt", rs.getInt("unmanage_sta_cnt"));
+		vo.put("external_sta_cnt", rs.getInt("external_sta_cnt"));
+		vo.put("unconfirm_event_cnt", rs.getInt("unconfirm_event_cnt"));
+		vo.put("high_event_cnt", rs.getInt("high_event_cnt"));
+		vo.put("medium_event_cnt", rs.getInt("medium_event_cnt"));
+		vo.put("low_event_cnt", rs.getInt("low_event_cnt"));
 		//		vo.put("pos_lat", rs.getLong("pos_lat"));
 		//		vo.put("pos_lng", rs.getLong("pos_lng"));
 		return vo;
