@@ -18,6 +18,13 @@ public class AppProperties {
 	public static final String INIT_PWD = "adminme00!";
 	public static final String CRYOTO_KEY = "UNETANYANGEL";
 
+	public static String admin_crypto_key = "0123456789123456";
+	public static String web_root_url = "/usr/local/blazeds/tomcat/webapps/anyclick_wips/";
+	public static String image_url = "/usr/local/blazeds/tomcat/webapps/anyclick_wips/uploadfile/file/";
+	public static String firmware_url = "/usr/local/blazeds/tomcat/webapps/anyclick_wips/uploadfile/fw_file/";
+	public static String license_url = "/usr/local/blazeds/tomcat/webapps/anyclick_wips/uploadfile/license_file/";
+	public static String db_url = "/opt/backup/db/";
+
 	public static final int SESSION_TIMEOUT = 10 * 60;
 
 	public void setName(String name) {

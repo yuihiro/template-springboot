@@ -99,7 +99,7 @@ public class LogRepository {
 		String query = QueryUtil.getWhereQuery($param);
 		query += QueryUtil.getTimeQuery($param, "reg_time", true, query);
 		query += QueryUtil.getOrderQuery("reg_time desc");
-		String sql = "SELECT * FROM command_profile_tbl " + query;
+		String sql = "SELECT *, status as detail_status FROM command_profile_tbl " + query;
 		List result = template.query(sql, $param, new CommandMapper("DETAIL"));
 		return result;
 	}

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.config.AppProperties;
 import anyclick.wips.repository.CommonRepository;
 import anyclick.wips.repository.ServerRepository;
@@ -35,7 +37,10 @@ public class ServerService {
 	}
 
 	public Map getServer(long $id) {
-		return repo.getServer($id);
+		Map result = Maps.newHashMap();
+		result.put("server_info", repo.getServer($id));
+		result.put("event_data", repo.getEventCnt($id));
+		return result;
 	}
 
 	public int insertServer(Map<String, Object> $param) {
@@ -62,6 +67,10 @@ public class ServerService {
 		repo.deleteServerPolicy($id);
 		common_repo.updateAdminLog(3, "서버(" + $id + ")를 삭제하였습니다.");
 		return result;
+	}
+
+	public List getPolicyLogList(long $id) {
+		return repo.getPolicyLogList($id);
 	}
 
 }

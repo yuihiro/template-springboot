@@ -1,6 +1,5 @@
 package anyclick.wips.repository;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
 
-import anyclick.wips.util.FileUtil;
-import anyclick.wips.util.Util;
+import anyclick.wips.repository.mapper.ConfigMapper;
+import anyclick.wips.repository.mapper.LicenseMapper;
 
 @Repository
 public class ConfigRepository {
@@ -21,25 +20,20 @@ public class ConfigRepository {
 	NamedParameterJdbcTemplate template;
 
 	public Map getConfig() {
-		Map result = getSystemConfig();
-		result.put("rad_info", FileUtil.getConfigFile("src/main/resources/radiusd.conf"));
+		Map result = getAppConfig();
+		//result.put("license", getLicenseInfo());
 		return result;
 	}
 
-	private Map getSystemConfig() {
-		String sql = "SELECT * FROM env_tbl";
-		List<Map<String, Object>> list = (List<Map<String, Object>>) template.queryForList(sql, Maps.newHashMap());
-		Map result = Maps.newHashMap();
-		for (Map item : list) {
-			result.put(item.get("name"), Util.toHyphen(item.get("value")) + "|" + Util.toHyphen(item.get("kname")) + "|" + Util.toHyphen(item.get("seq")));
-		}
+	private Map getAppConfig() {
+		String sql = "SELECT * FROM global_config_tbl";
+		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new ConfigMapper());
 		return result;
 	}
 
-	private List getPermitIpList() {
-		String sql = "SELECT INET_NTOA(from_ip), INET_NTOA(to_ip), enabled, etc FROM webconsole_accessible_ip_tbl";
-		List result = template.queryForList(sql, Maps.newHashMap());
+	public Map getLicenseInfo() {
+		String sql = "SELECT * FROM license_list WHERE mac IS NOT NULL AND type = 1 ORDER BY saved_time DESC LIMIT 1";
+		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new LicenseMapper());
 		return result;
 	}
-
 }

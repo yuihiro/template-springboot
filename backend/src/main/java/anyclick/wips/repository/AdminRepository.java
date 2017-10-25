@@ -71,5 +71,4 @@ public class AdminRepository {
 		result = template.update(sql, param);
 		return result;
 	}
-
 }

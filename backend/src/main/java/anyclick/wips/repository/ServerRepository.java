@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Maps;
 
 import anyclick.wips.data.Enums.MapperType;
+import anyclick.wips.repository.mapper.CommandMapper;
+import anyclick.wips.repository.mapper.EventCntMapper;
 import anyclick.wips.repository.mapper.ServerMapper;
 import anyclick.wips.util.QueryUtil;
 
@@ -55,6 +57,14 @@ public class ServerRepository {
 		} catch (EmptyResultDataAccessException e) {
 
 		}
+		return result;
+	}
+
+	public List getEventCnt(long $id) {
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("id", $id);
+		String sql = "SELECT * FROM (SELECT * FROM dash_event_summary WHERE server_id = :id) as dash_event_summary LEFT JOIN server_info_tbl ON server_info_tbl.server_id = dash_event_summary.server_id ORDER BY server_info_tbl.server_id, TYPE, sub_type";
+		List result = template.query(sql, param, new EventCntMapper());
 		return result;
 	}
 
@@ -123,6 +133,17 @@ public class ServerRepository {
 		template.update(sql, param);
 		sql = "DELETE FROM event_policy_general_tbl WHERE server_id = :id";
 		template.update(sql, param);
+		return result;
+	}
+
+	public List getPolicyLogList(long $id) {
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("id", $id);
+		String sql = "SELECT * FROM (SELECT * FROM command_profile_tbl WHERE server_id = :id) AS command_profile_tbl ";
+		sql += "LEFT JOIN (SELECT id, type, sub_type, target, target_name from command_tbl) as command_tbl ";
+		sql += "ON command_profile_tbl.command_id = command_tbl.id ";
+		sql += "ORDER BY reg_time desc ";
+		List result = template.query(sql, param, new CommandMapper("SENSOR"));
 		return result;
 	}
 }

@@ -36,7 +36,6 @@ public class MainService {
 	public static List<HttpSession> login_user_lst = Lists.newCopyOnWriteArrayList();
 
 	public Map login(String $id, String $pwd, HttpServletRequest $req) {
-		log.info($pwd);
 		String pwd = CryptoUtil.decrypt($pwd, AppProperties.CRYOTO_KEY);
 		Map login_data = null;
 		if ($id.equals(AppProperties.INIT_ID) && pwd.equals(AppProperties.INIT_PWD)) {
@@ -70,6 +69,7 @@ public class MainService {
 		login_data.remove("pwd");
 		Map app_data = Maps.newHashMap();
 		if ("SUCCESS".equals(login_data.get("login_type"))) {
+			main_repo.initDatabase();
 			app_data = getAppData();
 		}
 		Map result = Maps.newHashMap();
