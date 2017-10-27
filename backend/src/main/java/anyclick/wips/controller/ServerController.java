@@ -54,9 +54,13 @@ public class ServerController {
 		return service.deleteServer(id);
 	}
 
+	@PostMapping("getPolicyLogListCntByServer")
+	public long getPolicyLogListCnt(@RequestBody Map<String, Object> $param) {
+		return service.getPolicyLogListCnt($param);
+	}
+
 	@PostMapping("getPolicyLogListByServer")
 	public List getPolicyLogList(@RequestBody Map<String, Object> $param) {
-		long id = Long.parseLong($param.get("id").toString());
-		return service.getPolicyLogList(id);
+		return service.getPolicyLogList($param);
 	}
 }

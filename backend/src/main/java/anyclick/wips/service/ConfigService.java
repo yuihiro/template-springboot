@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import anyclick.wips.repository.ConfigRepository;
-import anyclick.wips.util.FileUtil;
 
 @Service
 @Transactional
@@ -72,4 +71,7 @@ public class ConfigService {
 		return ip;
 	}
 
+	public int updateConfig(Map<String, Object> $param) {
+		return repo.updateConfig($param);
+	}
 }

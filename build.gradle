@@ -145,7 +145,7 @@ task copyFront(dependsOn:['cleanPublic']) {
     }
 }
 
-task makeWar() {
+task make() {
 	if(project.hasProperty("front")){
 		dependsOn 'updateConfig', 'copyFront',':backend:bootRepackage'
 	} else {

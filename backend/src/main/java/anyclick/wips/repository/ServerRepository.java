@@ -136,14 +136,19 @@ public class ServerRepository {
 		return result;
 	}
 
-	public List getPolicyLogList(long $id) {
-		Map<String, Object> param = Maps.newHashMap();
-		param.put("id", $id);
-		String sql = "SELECT * FROM (SELECT * FROM command_profile_tbl WHERE server_id = :id) AS command_profile_tbl ";
+	public long getPolicyLogListCnt(Map<String, Object> $param) {
+		String sql = "SELECT COUNT(*) FROM command_profile_tbl WHERE server_id = :id";
+		Long result = template.queryForObject(sql, $param, Long.class);
+		return result;
+	}
+
+	public List getPolicyLogList(Map<String, Object> $param) {
+		String sql = "SELECT * FROM (SELECT * FROM command_profile_tbl WHERE server_id = :id ) AS command_profile_tbl ";
 		sql += "LEFT JOIN (SELECT id, type, sub_type, target, target_name from command_tbl) as command_tbl ";
 		sql += "ON command_profile_tbl.command_id = command_tbl.id ";
 		sql += "ORDER BY reg_time desc ";
-		List result = template.query(sql, param, new CommandMapper("SENSOR"));
+		sql += QueryUtil.getLimitQuery($param);
+		List result = template.query(sql, $param, new CommandMapper("SENSOR"));
 		return result;
 	}
 }

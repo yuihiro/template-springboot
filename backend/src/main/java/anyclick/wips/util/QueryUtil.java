@@ -52,10 +52,18 @@ public class QueryUtil {
 			//	|| entry.getKey().equalsIgnoreCase("user_name")) {
 
 			if (StringUtils.contains(entry.getValue().toString(), "%")) {
-				//entry.setValue("%" + entry.getValue() + "%");
-				sql += " " + entry.getKey() + " LIKE :" + entry.getKey();
+				if (StringUtils.contains(entry.getKey().toString(), "mac")) {
+					sql += " HEX(" + entry.getKey() + ") LIKE :" + entry.getKey();
+				} else {
+					//entry.setValue("%" + entry.getValue() + "%");
+					sql += " " + entry.getKey() + " LIKE :" + entry.getKey();
+				}
 			} else {
-				sql += " " + entry.getKey() + " = :" + entry.getKey();
+				if (StringUtils.contains(entry.getKey().toString(), "mac")) {
+					sql += " HEX(" + entry.getKey() + ") = :" + entry.getKey();
+				} else {
+					sql += " " + entry.getKey() + " = :" + entry.getKey();
+				}
 			}
 		}
 		sql += getKeyQuery($param, sql);

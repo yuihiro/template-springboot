@@ -46,7 +46,6 @@ public class DashboardService {
 		result.put("server_data", server_repo.getServerList(Maps.newHashMap()));
 		//		result.put("last_event_id", last_event_id);
 		result.put("update_time", System.currentTimeMillis());
-		log.info("result");
 		return result;
 	}
 
@@ -59,13 +58,11 @@ public class DashboardService {
 		result.put("memory", memUsePercent);
 		result.put("disk", diskUsePercent);
 		SNMPv1CommunicationInterface comInterface1 = null;
-		log.info($host + " / " + $community);
 		try {
 			InetAddress hostAddress = InetAddress.getByName($host);
 			int version = 1; // SNMPv1	(ver 0=1, 1=2v, 2=3)
 			comInterface1 = new SNMPv1CommunicationInterface(version, hostAddress, $community);
 			if (comInterface1 != null) {
-				log.info("2");
 				comInterface1.setSocketTimeout(1000);
 
 				int ssCpuUser = getSNMPInt(comInterface1, "1.3.6.1.4.1.2021.11.9.0");
@@ -81,16 +78,11 @@ public class DashboardService {
 				double memCached = getSNMPDouble(comInterface1, "1.3.6.1.4.1.2021.4.15.0");
 				memUsePercent = 100 - (int) (((memAvailReal + memBuffer + memCached) / memTotalReal) * 100);
 				comInterface1.closeConnection();
-
-				log.info("3");
-				log.info(ssCpuUser + "");
-				log.info(ssCpuSystem + "");
 				result.put("cpu", cpuUsePercent);
 				result.put("memory", memUsePercent);
 				result.put("disk", diskUsePercent);
 			}
 		} catch (Exception e) {
-			log.info("20");
 			e.printStackTrace();
 		} finally {
 			try {

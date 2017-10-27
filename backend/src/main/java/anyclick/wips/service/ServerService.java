@@ -69,8 +69,11 @@ public class ServerService {
 		return result;
 	}
 
-	public List getPolicyLogList(long $id) {
-		return repo.getPolicyLogList($id);
+	public Long getPolicyLogListCnt(Map<String, Object> $param) {
+		return repo.getPolicyLogListCnt($param);
 	}
 
+	public List getPolicyLogList(Map<String, Object> $param) {
+		return repo.getPolicyLogList($param);
+	}
 }
