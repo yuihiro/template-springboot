@@ -14,7 +14,12 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CryptoUtil {
+
+	private static final Logger log = LoggerFactory.getLogger(CryptoUtil.class);
 
 	private static final String TRANSFORM = "AES/CBC/PKCS5Padding";
 	private static final String HASH = "SHA-256";
@@ -42,6 +47,7 @@ public class CryptoUtil {
 	}
 
 	public static String decrypt(String text, String key) {
+		log.debug("decrypt : " + text + "/" + key);
 		String result = null;
 		if (ecipher == null) {
 			initCipher(key);
@@ -58,6 +64,7 @@ public class CryptoUtil {
 		try {
 			result = new String(value, "UTF8");
 		} catch (UnsupportedEncodingException e) {
+			log.debug("decrypt : " + text + "/" + key);
 			e.printStackTrace();
 		}
 		return result;

@@ -22,10 +22,12 @@ import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
 
+import anyclick.wips.repository.mapper.ApMapper;
 import anyclick.wips.repository.mapper.CommandMapper;
 import anyclick.wips.repository.mapper.MapMapper;
 import anyclick.wips.repository.mapper.PolicyMapper;
 import anyclick.wips.repository.mapper.ProfileMapper;
+import anyclick.wips.repository.mapper.StationMapper;
 import anyclick.wips.util.QueryUtil;
 
 @Repository
@@ -140,12 +142,12 @@ public class PolicyRepository {
 		return sum;
 	}
 
-	public long insertPolicyCommand(int $type, int $status, long $id, String $name) {
+	public long insertPolicyCommand(int $type, int $sub_type, int $status, long $id, String $name) {
 		KeyHolder key = new GeneratedKeyHolder();
 		Map param = Maps.newHashMap();
 		param.put("reg_time", new Timestamp(System.currentTimeMillis()));
-		param.put("type", 1);
-		param.put("sub_type", $type);
+		param.put("type", $type);
+		param.put("sub_type", $sub_type);
 		param.put("status", $status);
 		param.put("target", $id);
 		param.put("target_name", $name);
@@ -162,8 +164,6 @@ public class PolicyRepository {
 		param.put("command_id", "");
 		param.put("server_id", "");
 		param.put("server_name", "");
-		param.put("map_id", "");
-		param.put("map_name", "");
 		String query = QueryUtil.getInsertQuery(param, null);
 		String sql = "INSERT INTO command_profile_tbl " + query;
 		int[] result = template.batchUpdate(sql, batch);
@@ -175,13 +175,14 @@ public class PolicyRepository {
 	}
 
 	public List getPolicyCommandStatus(long $id) {
+		// 테스트용
 		updatePolicyCommandStatus($id);
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("command_id", $id);
 		param.put("status", 3);
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM command_profile_tbl WHERE command_id = :command_id AND status >= :status");
-		List result = template.query(sql.toString(), param, new CommandMapper("PROFILE"));
+		List result = template.query(sql.toString(), param, new CommandMapper("DETAIL"));
 		return result;
 	}
 
@@ -194,6 +195,50 @@ public class PolicyRepository {
 		param.put("id", idx);
 		String sql = "UPDATE command_profile_tbl SET status = :status WHERE command_id = :command_id AND id = :id";
 		return template.update(sql, param);
+	}
+
+	public List getApList() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * FROM ap_mng_list");
+		List result = template.query(sql.toString(), new ApMapper());
+		return result;
+	}
+
+	public List getStationList() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * FROM sta_mng_list");
+		List result = template.query(sql.toString(), new StationMapper());
+		return result;
+	}
+
+	public long insertApList(List<Map<String, Object>> $param) {
+		template.update("DELETE FROM ap_mng_list WHERE server_id = 0", Maps.newHashMap());
+
+		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch($param.toArray(new HashMap[$param.size()]));
+		Map param = (Map) $param.get(0);
+		String query = QueryUtil.getInsertQuery(param, null);
+		String sql = "INSERT INTO ap_mng_list " + query;
+		int[] result = template.batchUpdate(sql, batch);
+		int sum = 0;
+		for (int item : result) {
+			sum += item;
+		}
+		return sum;
+	}
+
+	public long insertStationList(List<Map<String, Object>> $param) {
+		template.update("DELETE FROM sta_mng_list WHERE server_id = 0", Maps.newHashMap());
+
+		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch($param.toArray(new HashMap[$param.size()]));
+		Map param = (Map) $param.get(0);
+		String query = QueryUtil.getInsertQuery(param, null);
+		String sql = "INSERT INTO sta_mng_list " + query;
+		int[] result = template.batchUpdate(sql, batch);
+		int sum = 0;
+		for (int item : result) {
+			sum += item;
+		}
+		return sum;
 	}
 
 	class sortCompare implements Comparator<Map> {

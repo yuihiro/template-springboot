@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.google.common.collect.Maps;
 
 import anyclick.wips.util.DateUtil;
+import anyclick.wips.util.Util;
 
 public class CommandMapper implements RowMapper {
 
@@ -32,14 +33,14 @@ public class CommandMapper implements RowMapper {
 			vo.put("sub_type", rs.getInt("sub_type"));
 			vo.put("sub_type_str", MapperHelper.commandSubType(rs.getInt("type"), rs.getInt("sub_type")));
 			vo.put("target", rs.getInt("target"));
-			vo.put("target_name", rs.getString("target_name"));
+			vo.put("target_name", Util.toHyphen(rs.getString("target_name")));
 			vo.put("detail", rs.getString("command_id") == null ? false : true);
 		} else if (type.equals("DETAIL")) {
 			vo.put("command_id", rs.getLong("command_id"));
 			vo.put("server_id", rs.getInt("server_id"));
 			vo.put("server_name", rs.getString("server_name"));
 			vo.put("map_id", rs.getInt("map_id"));
-			vo.put("map_name", rs.getString("map_name"));
+			vo.put("map_name", Util.toHyphen(rs.getString("map_name")));
 			vo.put("result", rs.getString("result"));
 		} else if (type.equals("SENSOR")) {
 			vo.put("type", rs.getInt("type"));
@@ -47,8 +48,8 @@ public class CommandMapper implements RowMapper {
 			vo.put("sub_type", rs.getInt("sub_type"));
 			vo.put("sub_type_str", MapperHelper.commandSubType(rs.getInt("type"), rs.getInt("sub_type")));
 			vo.put("target", rs.getInt("target"));
-			vo.put("target_name", rs.getString("target_name"));
-			vo.put("map_name", rs.getString("map_name"));
+			vo.put("target_name", Util.toHyphen(rs.getString("target_name")));
+			vo.put("map_name", Util.toHyphen(rs.getString("map_name")));
 		}
 		return vo;
 	}

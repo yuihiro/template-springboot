@@ -30,7 +30,7 @@ public class MapperHelper {
 			label = "프로파일";
 			break;
 		case 2:
-			label = "관리AP/RAP목록";
+			label = "AP/단말분류";
 			break;
 		default:
 			break;
@@ -53,7 +53,7 @@ public class MapperHelper {
 			}
 			break;
 		case 2:
-			label = "LIST";
+			label = "적용";
 			break;
 		default:
 			break;

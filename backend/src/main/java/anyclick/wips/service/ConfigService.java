@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Maps;
+
 import anyclick.wips.repository.ConfigRepository;
 
 @Service
@@ -30,13 +32,16 @@ public class ConfigService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Map getConfig() {
-		Map result = repo.getConfig();
+		Map result = Maps.newHashMap();
+		result.put("config_info", repo.getConfig());
 		//result.put("rad_info", FileUtil.getConfigFile("src/main/resources/radiusd.conf"));
-		result.put("server_mac", getServerMac());
-		result.put("server_ip", getServerIp());
-		result.put("ntp_ip", getNtpIp());
-		result.put("rpm_name", common_service.execCommand("rpm -qa Anyclick-AIR"));
+		Map server_info = Maps.newHashMap();
+		server_info.put("server_mac", getServerMac());
+		server_info.put("server_ip", getServerIp());
+		server_info.put("ntp_ip", getNtpIp());
+		server_info.put("rpm_name", common_service.execCommand("rpm -qa Anyclick-AIR"));
 		//result.put("rpm_name", common_service.executeCommand("rpm -qa Anyclick-AIR"));
+		result.put("server_info", server_info);
 		return result;
 	}
 

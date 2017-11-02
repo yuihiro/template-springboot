@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 
 import anyclick.wips.repository.CommonRepository;
 import anyclick.wips.repository.PolicyRepository;
+import anyclick.wips.repository.ServerRepository;
 
 @Service
 @Transactional
@@ -20,6 +21,9 @@ public class PolicyService {
 
 	@Autowired
 	PolicyRepository repo;
+
+	@Autowired
+	ServerRepository server_repo;
 
 	@Autowired
 	CommonRepository common_repo;
@@ -41,7 +45,7 @@ public class PolicyService {
 		log.debug($param.toString());
 		long id = Long.parseLong($param.get("id").toString());
 		String name = $param.get("name").toString();
-		long command_id = repo.insertPolicyCommand(1, 1, id, name);
+		long command_id = repo.insertPolicyCommand(1, 1, 1, id, name);
 		List<Map> details = (List) $param.get("map_lst");
 		for (Map item : details) {
 			item.put("command_id", command_id);
@@ -64,7 +68,7 @@ public class PolicyService {
 		}
 		repo.deletePolicyList(id);
 		repo.insertPolicyList(policy_lst);
-		long command_id = repo.insertPolicyCommand(3, 3, id, name);
+		long command_id = repo.insertPolicyCommand(1, 3, 3, id, name);
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 추가하였습니다.");
 		return id;
 	}
@@ -85,7 +89,7 @@ public class PolicyService {
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 수정하였습니다.");
 		long command_id = -1;
 		if ($param.get("map_lst") != null) {
-			command_id = repo.insertPolicyCommand(2, 3, id, name);
+			command_id = repo.insertPolicyCommand(1, 2, 3, id, name);
 			List<Map> details = (List) $param.get("map_lst");
 			for (Map item : details) {
 				item.put("command_id", command_id);
@@ -102,7 +106,7 @@ public class PolicyService {
 		String name = $param.get("name").toString();
 		int result = repo.deleteProfile(id);
 		repo.deletePolicyList(id);
-		repo.insertPolicyCommand(4, 3, id, name);
+		repo.insertPolicyCommand(1, 4, 3, id, name);
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 삭제하였습니다.");
 		return result;
 	}
@@ -110,5 +114,31 @@ public class PolicyService {
 	public List<Map> processProfile(long $id) {
 		List<Map> result = repo.getPolicyCommandStatus($id);
 		return result;
+	}
+
+	public Map getClassifyData() {
+		Map result = Maps.newHashMap();
+		List server_lst = server_repo.getServerList(Maps.newHashMap());
+		List ap_lst = repo.getApList();
+		List station_lst = repo.getStationList();
+		result.put("server_lst", server_lst);
+		result.put("ap_lst", ap_lst);
+		result.put("station_lst", station_lst);
+		return result;
+	}
+
+	public long applyClassify(Map<String, Object> $param) {
+		repo.insertApList((List) $param.get("ap_lst"));
+		repo.insertStationList((List) $param.get("station_lst"));
+
+		long command_id = repo.insertPolicyCommand(2, 1, 1, -1, null);
+		List<Map> details = (List) $param.get("map_lst");
+		for (Map item : details) {
+			item.put("command_id", command_id);
+		}
+		log.debug(details.toString());
+		repo.insertPolicyCommandDetail(details);
+		common_repo.updateAdminLog(3, "AP/단말분류를 적용하였습니다.");
+		return command_id;
 	}
 }

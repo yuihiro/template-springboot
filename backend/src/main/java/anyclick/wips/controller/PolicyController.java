@@ -6,9 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import anyclick.wips.service.PolicyService;
@@ -22,34 +22,46 @@ public class PolicyController {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(value = "getProfileData")
+	// 탐지차단정책관리
+	@PostMapping("getProfileData")
 	public Map data() {
 		return service.getProfileData();
 	}
 
-	@RequestMapping(value = "insertProfile", method = RequestMethod.POST)
+	@PostMapping("insertProfile")
 	public long insert(@RequestBody Map<String, Object> $param) {
 		return service.insertProfile($param);
 	}
 
-	@RequestMapping(value = "updateProfile", method = RequestMethod.POST)
+	@PostMapping("updateProfile")
 	public long update(@RequestBody Map<String, Object> $param) {
 		return service.updateProfile($param);
 	}
 
-	@RequestMapping(value = "deletePolicy", method = RequestMethod.POST)
+	@PostMapping("deletePolicy")
 	public int delete(@RequestBody Map<String, Object> $param) {
 		return service.deleteProfile($param);
 	}
 
-	@RequestMapping(value = "applyProfile", method = RequestMethod.POST)
+	@PostMapping("applyProfile")
 	public long apply(@RequestBody Map<String, Object> $param) {
 		return service.applyProfile($param);
 	}
 
-	@RequestMapping(value = "getPolicyProcess", method = RequestMethod.POST)
+	@PostMapping("getPolicyProcess")
 	public List<Map> process(@RequestBody Map<String, Object> $param) {
 		long id = Long.parseLong($param.get("id").toString());
 		return service.processProfile(id);
+	}
+
+	// AP/단말분류관리
+	@PostMapping("getClassifyData")
+	public Map getClassifyData() {
+		return service.getClassifyData();
+	}
+
+	@PostMapping("applyClassify")
+	public long applyClassify(@RequestBody Map<String, Object> $param) {
+		return service.applyClassify($param);
 	}
 }
