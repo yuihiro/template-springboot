@@ -23,7 +23,7 @@ public class ProfileMapper implements RowMapper {
 		vo.put("type_str", MapperHelper.policyType(rs.getInt("type")));
 		vo.put("reg_time", DateUtil.timeToStr(rs.getTimestamp("reg_time")));
 		vo.put("chg_time", DateUtil.timeToStr(rs.getTimestamp("chg_time")));
-		vo.put("server_name", (rs.getString("server_name") == null) ? "통합" : (rs.getString("server_name")));
+		vo.put("server_name", (rs.getInt("server_id") == 0) ? "통합" : (rs.getString("server_name")));
 		vo.put("use", rs.getInt("use"));
 		vo.put("priority", rs.getInt("priority"));
 		vo.put("alert", rs.getInt("alert"));

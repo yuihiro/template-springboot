@@ -32,12 +32,18 @@ public class PolicyService {
 
 	public Map getProfileData() {
 		Map result = Maps.newHashMap();
-		List profile_lst = repo.getProfileList();
 		List map_lst = repo.getMapList();
+		List profile_lst = repo.getProfileList();
 		List policy_lst = repo.getPolicyList();
-		result.put("profile_lst", profile_lst);
+		List general_lst = repo.getGeneralPolicyList();
+		List vendor_lst = repo.getPolicyVendorList();
+		List except_lst = repo.getPolicyExceptList();
 		result.put("map_lst", map_lst);
+		result.put("profile_lst", profile_lst);
 		result.put("policy_lst", policy_lst);
+		result.put("general_lst", general_lst);
+		result.put("vendor_lst", vendor_lst);
+		result.put("except_lst", except_lst);
 		return result;
 	}
 
@@ -57,17 +63,20 @@ public class PolicyService {
 	}
 
 	public long insertProfile(Map<String, Object> $param) {
-		log.debug($param.toString());
+		log.info($param.toString());
 		Map profile_info = (Map) $param.get("profile_info");
 		String name = profile_info.get("name").toString();
 		long id = repo.insertProfile(profile_info);
-		List<Map> policy_lst = (List) $param.get("policy_lst");
-		for (Map item : policy_lst) {
-			item.put("server_id", 0);
-			item.put("profile_idx", id);
+		repo.insertGeneralPolicyList(id, (List) $param.get("general_lst"));
+		repo.insertPolicyList(id, (List) $param.get("policy_lst"));
+		List vendor_lst = (List) $param.get("vendor_lst");
+		List except_lst = (List) $param.get("except_lst");
+		if (vendor_lst.size() > 0) {
+			repo.insertPolicyVendorList(id, vendor_lst);
 		}
-		repo.deletePolicyList(id);
-		repo.insertPolicyList(policy_lst);
+		if (except_lst.size() > 0) {
+			repo.insertPolicyExceptList(id, except_lst);
+		}
 		long command_id = repo.insertPolicyCommand(1, 3, 3, id, name);
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 추가하였습니다.");
 		return id;
@@ -79,14 +88,17 @@ public class PolicyService {
 		String name = profile_info.get("name").toString();
 		long id = Long.parseLong(profile_info.get("id").toString());
 		repo.updateProfile(profile_info);
-		List<Map> policy_lst = (List) $param.get("policy_lst");
-		for (Map item : policy_lst) {
-			item.put("server_id", 0);
-			item.put("profile_idx", id);
+		repo.clearProfile(id);
+		repo.insertGeneralPolicyList(id, (List) $param.get("general_lst"));
+		repo.insertPolicyList(id, (List) $param.get("policy_lst"));
+		List vendor_lst = (List) $param.get("vendor_lst");
+		List except_lst = (List) $param.get("except_lst");
+		if (vendor_lst.size() > 0) {
+			repo.insertPolicyVendorList(id, vendor_lst);
 		}
-		repo.deletePolicyList(id);
-		repo.insertPolicyList(policy_lst);
-		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 수정하였습니다.");
+		if (except_lst.size() > 0) {
+			repo.insertPolicyExceptList(id, except_lst);
+		}
 		long command_id = -1;
 		if ($param.get("map_lst") != null) {
 			command_id = repo.insertPolicyCommand(1, 2, 3, id, name);
@@ -96,8 +108,8 @@ public class PolicyService {
 			}
 			log.debug(details.toString());
 			repo.insertPolicyCommandDetail(details);
-			//			common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 적용하였습니다.");
 		}
+		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 수정하였습니다.");
 		return command_id;
 	}
 
@@ -105,7 +117,6 @@ public class PolicyService {
 		long id = Long.parseLong($param.get("id").toString());
 		String name = $param.get("name").toString();
 		int result = repo.deleteProfile(id);
-		repo.deletePolicyList(id);
 		repo.insertPolicyCommand(1, 4, 3, id, name);
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 삭제하였습니다.");
 		return result;

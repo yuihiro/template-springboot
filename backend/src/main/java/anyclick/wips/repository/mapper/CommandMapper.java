@@ -42,6 +42,10 @@ public class CommandMapper implements RowMapper {
 			vo.put("map_id", rs.getInt("map_id"));
 			vo.put("map_name", Util.toHyphen(rs.getString("map_name")));
 			vo.put("result", rs.getString("result"));
+			String server_name = Util.toHyphen(rs.getString("server_name"));
+			String map_name = Util.toHyphen(rs.getString("map_name"));
+			String location = (map_name.equals("-")) ? server_name : server_name + "-" + map_name;
+			vo.put("location", location);
 		} else if (type.equals("SENSOR")) {
 			vo.put("type", rs.getInt("type"));
 			vo.put("type_str", MapperHelper.commandType(rs.getInt("type")));
@@ -49,7 +53,10 @@ public class CommandMapper implements RowMapper {
 			vo.put("sub_type_str", MapperHelper.commandSubType(rs.getInt("type"), rs.getInt("sub_type")));
 			vo.put("target", rs.getInt("target"));
 			vo.put("target_name", Util.toHyphen(rs.getString("target_name")));
-			vo.put("map_name", Util.toHyphen(rs.getString("map_name")));
+			String server_name = Util.toHyphen(rs.getString("server_name"));
+			String map_name = Util.toHyphen(rs.getString("map_name"));
+			String location = (map_name.equals("-")) ? server_name : server_name + "-" + map_name;
+			vo.put("location", location);
 		}
 		return vo;
 	}

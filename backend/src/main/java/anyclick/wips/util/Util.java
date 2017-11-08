@@ -102,11 +102,31 @@ public class Util {
 
 		if (value instanceof String) {
 			String str = (String) value;
-			if (str.trim().length() == 0 || str.endsWith("-") || str.equalsIgnoreCase("null")) {
+			if (str.trim().length() == 0 || str.endsWith("-") || str.endsWith("-1") || str.equalsIgnoreCase("null")) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public static String ouiToStr(Long mac_addr_number) {
+		Long mac_number = mac_addr_number;
+		String mac_addr = "";
+		String temp = mac_number.toHexString(mac_number);
+		//String temp = mac_number.toString(16);
+		for (int len = 0; len < 6 && temp.length() < 6; len++) {
+			temp = "0" + temp;
+		}
+		mac_addr = temp.substring(0, 2) + ":" + temp.substring(2, 4) + ":" + temp.substring(4, 6);
+		return mac_addr.toUpperCase();
+	}
+
+	public static String ouiToLong(String temp) {
+		for (int len = 0; len < 6 && temp.length() < 6; len++) {
+			temp = "0" + temp;
+		}
+		String mac_addr = temp.substring(0, 2) + ":" + temp.substring(2, 4) + ":" + temp.substring(4, 6);
+		return mac_addr.toUpperCase();
 	}
 
 	public static String macToStr(Long mac_addr_number) {
