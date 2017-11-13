@@ -154,7 +154,6 @@ public class PolicyRepository {
 		param.put("id", $id);
 		int result = 0;
 		result = template.update(sql, param);
-		template.update("DELETE FROM event_policy_tbl WHERE profile_idx = :id", param);
 		clearProfile($id);
 		return result;
 	}
@@ -162,6 +161,7 @@ public class PolicyRepository {
 	public void clearProfile(long $id) {
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("id", $id);
+		template.update("DELETE FROM event_policy_tbl WHERE profile_idx = :id", param);
 		template.update("DELETE FROM event_policy_general_tbl WHERE profile_idx = :id", param);
 		template.update("DELETE FROM general_vendor_policy WHERE profile_idx = :id", param);
 		template.update("DELETE FROM policy_5_6_vendor_list WHERE profile_idx = :id", param);
