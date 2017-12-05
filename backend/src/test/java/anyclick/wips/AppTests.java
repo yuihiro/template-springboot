@@ -12,14 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import anyclick.wips.repository.MainRepository;
 import anyclick.wips.repository.UserSummaryRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = App.class)
-@WebAppConfiguration
+//@WebAppConfiguration
 public class AppTests {
 
 	@Autowired

@@ -83,6 +83,18 @@ public class Util {
 		return value.toString();
 	}
 
+	public static String toEmpty(Object value) {
+		if (value == null) {
+			return "";
+		}
+		if (value instanceof String) {
+			if (((String) value).trim().length() == 0) {
+				return "";
+			}
+		}
+		return value.toString();
+	}
+
 	public static String toNullStr(Object value) {
 		if (value == null) {
 			return "null";

@@ -2,7 +2,6 @@
 	<wb-module deploy-name="anyclick_wips_intergrate">
         <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF" source-path="/src/public"/>
         <property name="context-root" value="anyclick_wips_intergrate"/>

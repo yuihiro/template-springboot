@@ -198,8 +198,8 @@ public class QueryUtil {
 		int i = 0;
 		int total = entries.size();
 		for (Entry<String, Object> entry : entries) {
-			i++;
 			if (isContain($except, entry.getKey()) == false) {
+				i++;
 				if (i != 1) {
 					sql += ", ";
 				}

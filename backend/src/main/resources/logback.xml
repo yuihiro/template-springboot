@@ -33,11 +33,11 @@
 		<appender-ref ref="ROLLING" />
 	</root>
 	
-	<logger name="anyclick" level="DEBUG"/>
-	<logger name="org.springframework" level="INFO"/>
-	<logger name="org.springframework.web" level="INFO"/>
+	<logger name="anyclick" level="INFO"/>
+	<logger name="org.springframework" level="WARN"/>
+	<logger name="org.springframework.web" level="WARN"/>
 	<logger name="org.springframework.jdbc" level="INFO"/>
-	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG"/>
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="WARN"/>
 	
   	<logger name="jdbc.sqlonly">
     	<level value="info"/>

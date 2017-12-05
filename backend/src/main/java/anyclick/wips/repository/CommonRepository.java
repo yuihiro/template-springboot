@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.common.collect.Maps;
 
+import anyclick.wips.config.AppProperties;
 import anyclick.wips.error.AuthException;
 
 @Repository
@@ -34,6 +35,9 @@ public class CommonRepository {
 		HttpServletRequest request = attributes.getRequest();
 		HttpServletResponse response = attributes.getResponse();
 		HttpSession session = request.getSession(false);
+		if (AppProperties.debug == true) {
+			return session;
+		}
 		if (session == null) {
 			throw new AuthException("NO SESSION");
 		}
@@ -41,7 +45,15 @@ public class CommonRepository {
 	}
 
 	public String getAdminID() {
-		return getSession().getAttribute("id").toString();
+		String result = null;
+		if (getSession() != null) {
+			result = getSession().getAttribute("id").toString();
+		} else {
+			if (AppProperties.debug == true) {
+				result = "root";
+			}
+		}
+		return result;
 	}
 
 	public int getAdminType() {

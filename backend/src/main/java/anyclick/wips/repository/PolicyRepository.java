@@ -102,7 +102,7 @@ public class PolicyRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT *, server.name as server_name FROM map_info_tbl as map ");
 		sql.append("LEFT JOIN event_policy_profile_tbl as profile ");
-		sql.append("ON map.profile_id = profile.idx ");
+		sql.append("ON map.profile_idx = profile.idx ");
 		sql.append("LEFT JOIN server_info_tbl as server ");
 		sql.append("ON map.server_id = server.server_id ");
 		sql.append(query);
@@ -313,14 +313,14 @@ public class PolicyRepository {
 
 	public List getApList() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM ap_mng_list");
+		sql.append("SELECT * FROM ap_mng_list WHERE server_id = 0");
 		List result = template.query(sql.toString(), new ApMapper());
 		return result;
 	}
 
 	public List getStationList() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM sta_mng_list");
+		sql.append("SELECT * FROM sta_mng_list WHERE server_id = 0");
 		List result = template.query(sql.toString(), new StationMapper());
 		return result;
 	}

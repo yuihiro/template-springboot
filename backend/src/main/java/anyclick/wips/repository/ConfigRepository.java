@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 
 import anyclick.wips.repository.mapper.ConfigMapper;
 import anyclick.wips.repository.mapper.LicenseMapper;
+import anyclick.wips.repository.mapper.LogConfigMapper;
 import anyclick.wips.util.QueryUtil;
 
 @Repository
@@ -27,14 +28,14 @@ public class ConfigRepository {
 	NamedParameterJdbcTemplate template;
 
 	public Map getConfig() {
-		Map result = getAppConfig();
-		//result.put("license", getLicenseInfo());
+		String sql = "SELECT * FROM global_config_tbl";
+		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new ConfigMapper());
 		return result;
 	}
 
-	private Map getAppConfig() {
-		String sql = "SELECT * FROM global_config_tbl";
-		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new ConfigMapper());
+	public Map getLogConfig() {
+		String sql = "SELECT * FROM log_config_tbl";
+		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new LogConfigMapper());
 		return result;
 	}
 
@@ -46,10 +47,21 @@ public class ConfigRepository {
 
 	public int updateConfig(Map<String, Object> $param) {
 		List<String> except = new ArrayList();
+		except.add("type");
 		String sql = "";
 		String query = "";
 		query = QueryUtil.getUpdateQuery($param, except);
 		sql = "UPDATE global_config_tbl SET " + query + "";
+		return template.update(sql, $param);
+	}
+
+	public int updateLogConfig(Map<String, Object> $param) {
+		List<String> except = new ArrayList();
+		except.add("type");
+		String sql = "";
+		String query = "";
+		query = QueryUtil.getUpdateQuery($param, except);
+		sql = "UPDATE log_config_tbl SET " + query + "";
 		return template.update(sql, $param);
 	}
 }
