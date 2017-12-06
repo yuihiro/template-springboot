@@ -22,7 +22,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		if (request.getRequestURI().equals("/error") == false) {
 			saveRequestInfo(request, handler);
 		}
-		log.info(request.getRequestURI() + " / " + AppProperties.debug + " / " + request.getSession(false));
+		//log.info(request.getRequestURI() + " / " + AppProperties.debug + " / " + request.getSession(false));
 		if (AppProperties.debug || handler instanceof HandlerMethod == false) {
 			return super.preHandle(request, response, handler);
 		}

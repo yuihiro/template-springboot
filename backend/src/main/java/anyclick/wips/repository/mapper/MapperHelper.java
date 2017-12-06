@@ -1,6 +1,23 @@
 package anyclick.wips.repository.mapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MapperHelper {
+
+	private static final Logger log = LoggerFactory.getLogger(MapperHelper.class);
+
+	public static String[] event_type_lst = new String[] { "관리AP", "운용", "보안>비인가AP", "보안>Flooding Attack", "보안>단말관리", "보안>Peer to Peer", "보안>Man in the Middle",
+			"보안>Air Attack Tool", "보안>MAC Spoofing", "보안>RF 간섭원", "보안>malformed 패킷" };
+	public static String[][] event_sub_type_lst = new String[][] { { "SSID", "BSSID", "프로토콜", "암호화방식", "제조사", "인증방식", "채널", "SSID Broadcast", "Data rate", "MCS set" },
+			{ "단말한대당 시간별트래픽", "AP별 단말접속수" }, { "Rogue AP", "미관리 AP", "미허가채널사용 AP", "WDS", "관리자차단 AP", "Wi-Fi 테더링", "Soft AP", "-", "WPS AP" },
+			{ "Association", "Disassociation", "Disassociation Broadcast", "Authentication", "Deauthentication", "Deauthentication Broadcast", "Probe Request", "RTS", "CTS",
+					"EAPOL-Start", "EAPOL-Logoff", "PS-Poll" },
+			{ "미관리 단말", "관리자차단단말", "관리단말의 미관리/Rogue/외부AP 연결", "미관리단말의 관리AP 연결", "-", "특정제조사단말의 관리AP 연결" }, { "Ad hoc", "Ad hoc (Online)", "Wi-Fi Direct", "관리단말 Ad hoc연결" },
+			{ "Honeypot AP (Offline)", "Honeypot AP (Online)", "관리단말 Honeypot연결" }, { "Fast WEP Cracking" }, { "AP MAC Spoofing", "STA MAC Spoofing" }, { "RF간섭원" },
+			{ "Invalid IE length", "Duplicate IE", "Redundant IE", "Abnormal IBSS and ESS setting", "Malformed association request", "Malformed HT IE", "Oversized duration",
+					"Invalid deauthentication code", "Invalid disassociation code", "Null-probe-response", "Oversized SSID", "Invalid-source-address", "Overflow-eapol-key",
+					"Fata-jack" } };
 
 	static public String commandStatus(int value) {
 		String label = "-";
@@ -266,6 +283,41 @@ public class MapperHelper {
 			break;
 		default:
 			label = "사용안함";
+			break;
+		}
+		return label;
+	}
+
+	static public String eventType(int value) {
+		String label = "-";
+		try {
+			label = event_type_lst[value - 1];
+		} catch (Exception e) {
+			log.info("INVALIDATE TYPE " + value);
+		}
+		return label;
+	}
+
+	static public String eventSubType(int type, int sub_type) {
+		String label = "-";
+		try {
+			label = event_sub_type_lst[type - 1][sub_type - 1];
+		} catch (Exception e) {
+			log.info("INVALIDATE TYPE " + type + "/" + sub_type);
+		}
+		return label;
+	}
+
+	static public String block(int value) {
+		String label = "-";
+		switch (value) {
+		case 0:
+			label = "-";
+			break;
+		case 1:
+			label = "차단";
+			break;
+		default:
 			break;
 		}
 		return label;

@@ -102,7 +102,8 @@ public class PolicyRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT *, server.name as server_name FROM map_info_tbl as map ");
 		sql.append("LEFT JOIN event_policy_profile_tbl as profile ");
-		sql.append("ON map.profile_idx = profile.idx ");
+		//sql.append("ON map.profile_idx = profile.idx ");
+		sql.append("ON map.server_id = profile.server_id AND map.profile_idx = profile.server_profile_id ");
 		sql.append("LEFT JOIN server_info_tbl as server ");
 		sql.append("ON map.server_id = server.server_id ");
 		sql.append(query);

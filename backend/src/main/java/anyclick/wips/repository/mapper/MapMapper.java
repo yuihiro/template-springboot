@@ -22,7 +22,7 @@ public class MapMapper implements RowMapper {
 		vo.put("parent_id", rs.getInt("parent_id"));
 		vo.put("depth", rs.getInt("depth"));
 		//		vo.put("sort_no", rs.getInt("sort_no"));
-		vo.put("profile_id", rs.getInt("profile_idx"));
+		vo.put("profile_id", rs.getInt("idx"));
 		vo.put("profile_name", rs.getString("name"));
 		vo.put("server_profile_id", rs.getInt("server_profile_id"));
 		vo.put("profile_type", rs.getInt("type"));
