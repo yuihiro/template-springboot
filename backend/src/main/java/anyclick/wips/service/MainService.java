@@ -27,10 +27,15 @@ public class MainService {
 
 	@Autowired
 	AdminRepository admin_repo;
+
 	@Autowired
 	CommonRepository common_repo;
+
 	@Autowired
 	MainRepository main_repo;
+
+	@Autowired
+	ConfigService config_service;
 
 	private static final Logger log = LoggerFactory.getLogger("MainService");
 	public static List<HttpSession> login_user_lst = Lists.newCopyOnWriteArrayList();
@@ -70,7 +75,7 @@ public class MainService {
 		Map app_data = Maps.newHashMap();
 		if ("SUCCESS".equals(login_data.get("login_type"))) {
 			main_repo.initDatabase();
-			app_data = getAppData();
+			app_data = config_service.getAppData();
 		}
 		Map result = Maps.newHashMap();
 		result.put("login_data", login_data);
@@ -95,13 +100,6 @@ public class MainService {
 				return;
 			}
 		}
-	}
-
-	public Map getAppData() {
-		Map result = Maps.newHashMap();
-		List<Map> admin_lst = admin_repo.getAdminList(Maps.newHashMap(), "TINY");
-		result.put("admin_lst", admin_lst);
-		return result;
 	}
 
 	public void printLoginAdminList() {

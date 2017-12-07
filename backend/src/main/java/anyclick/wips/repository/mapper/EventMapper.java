@@ -27,7 +27,7 @@ public class EventMapper implements RowMapper {
 		vo.put("sub_type", rs.getInt("sub_type"));
 		vo.put("sub_type_str", MapperHelper.eventSubType(rs.getInt("type"), rs.getInt("sub_type")));
 		vo.put("bssid", Util.macToStr(rs.getLong("bssid")));
-		vo.put("ssid", Util.toHyphen(rs.getString("bssid")));
+		vo.put("ssid", Util.toHyphen(rs.getString("ssid")));
 		vo.put("ap_str", "");
 		vo.put("sta", Util.macToStr(rs.getLong("sta")));
 		vo.put("station_str", "");

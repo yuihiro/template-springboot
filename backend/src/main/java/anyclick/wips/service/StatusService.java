@@ -25,9 +25,6 @@ public class StatusService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public Map getStatusData(Map<String, Object> $param) {
-		//		long user_cnt = repo.getUserCnt(null);
-		//		long nas_cnt = repo.getNasCnt(null);
-		//		long user_request_cnt = repo.getUserRequestCnt(null);
 		long start_time = Long.parseLong($param.get("start_time").toString());
 		long last_event_id = Long.parseLong($param.get("last_event_id").toString());
 

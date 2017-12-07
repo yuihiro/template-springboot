@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Maps;
 
+import anyclick.wips.repository.AdminRepository;
 import anyclick.wips.repository.CommonRepository;
 import anyclick.wips.repository.ConfigRepository;
 
@@ -34,6 +35,9 @@ public class ConfigService {
 	CommonRepository common_repo;
 
 	@Autowired
+	AdminRepository admin_repo;
+
+	@Autowired
 	CommonService common_service;
 
 	public String ntp_file = "/opt/anyair/util/ntp.sh";
@@ -44,15 +48,27 @@ public class ConfigService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	public Map getAppData() {
+		Map result = Maps.newHashMap();
+		result.put("server_info", getServerInfo());
+		result.put("ha_info", repo.getHaInfo());
+		result.put("license_info", repo.getLicenseInfo());
+		result.put("admin_lst", admin_repo.getAdminList(Maps.newHashMap(), "TINY"));
+		log.debug("SERVER INFO");
+		log.debug(result.get("server_info").toString());
+		log.debug("HA INFO");
+		log.debug(result.get("ha_info").toString());
+		log.debug("LICENSE INFO");
+		log.debug(result.get("license_info").toString());
+		return result;
+	}
+
 	public Map getConfig() {
 		Map result = Maps.newHashMap();
-		Map config_info = Maps.newHashMap();
-		config_info.putAll(repo.getConfig());
-		config_info.putAll(repo.getLogConfig());
-		config_info.putAll(getSnmpInfo());
-		config_info.put("ntp_ip", getNtp());
-		result.put("config_info", config_info);
-		result.put("server_info", getServerInfo());
+		result.putAll(repo.getConfig());
+		result.putAll(repo.getLogConfig());
+		result.putAll(getSnmpInfo());
+		result.put("ntp_ip", getNtp());
 		return result;
 	}
 

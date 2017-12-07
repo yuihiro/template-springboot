@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Maps;
 
 import anyclick.wips.repository.mapper.ConfigMapper;
+import anyclick.wips.repository.mapper.HaMapper;
 import anyclick.wips.repository.mapper.LicenseMapper;
 import anyclick.wips.repository.mapper.LogConfigMapper;
 import anyclick.wips.util.QueryUtil;
@@ -42,6 +43,12 @@ public class ConfigRepository {
 	public Map getLicenseInfo() {
 		String sql = "SELECT * FROM license_list WHERE mac IS NOT NULL AND type = 1 ORDER BY saved_time DESC LIMIT 1";
 		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new LicenseMapper());
+		return result;
+	}
+
+	public Map getHaInfo() {
+		String sql = "SELECT * FROM ha_info LIMIT 1";
+		Map<String, Object> result = (Map) template.queryForObject(sql, Maps.newHashMap(), new HaMapper());
 		return result;
 	}
 

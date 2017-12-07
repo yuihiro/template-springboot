@@ -32,7 +32,7 @@ public class LogRepository {
 		query += QueryUtil.getTimeQuery($param, "l_date", false, query);
 		query += QueryUtil.getOrderQuery("l_date desc");
 		query += QueryUtil.getLimitQuery($param);
-		String sql = "SELECT * FROM event_tbl LEFT JOIN server_info_tbl ON server_info_tbl.server_id = server_info_tbl.server_id LEFT JOIN map_info_tbl ON event_tbl.map_id = map_info_tbl.map_id "
+		String sql = "SELECT * FROM event_tbl LEFT JOIN server_info_tbl ON event_tbl.server_id = server_info_tbl.server_id LEFT JOIN map_info_tbl ON event_tbl.map_id = map_info_tbl.map_id "
 				+ query;
 		List result = template.query(sql, $param, new EventMapper());
 		return result;
