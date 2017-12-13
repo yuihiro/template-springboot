@@ -144,6 +144,9 @@ public class Util {
 	public static String macToStr(Long mac_addr_number) {
 		String mac_addr = "";
 		String temp = mac_addr_number.toHexString(mac_addr_number);
+		if (temp.length() >= 13) {
+			temp = temp.substring(1);
+		}
 		for (int len = 0; len < 12 && temp.length() < 12; len++) {
 			temp = "0" + temp;
 		}

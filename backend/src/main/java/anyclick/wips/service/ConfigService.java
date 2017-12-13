@@ -54,6 +54,8 @@ public class ConfigService {
 		result.put("ha_info", repo.getHaInfo());
 		result.put("license_info", repo.getLicenseInfo());
 		result.put("admin_lst", admin_repo.getAdminList(Maps.newHashMap(), "TINY"));
+		result.put("server_lst", common_repo.getServerList());
+		result.put("map_lst", common_repo.getMapList());
 		log.debug("SERVER INFO");
 		log.debug(result.get("server_info").toString());
 		log.debug("HA INFO");

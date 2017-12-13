@@ -12,15 +12,24 @@ import anyclick.wips.util.DateUtil;
 
 public class MapMapper implements RowMapper {
 
+	public String type = "NORMAL";
+
+	public MapMapper(String $type) {
+		type = $type;
+	}
+
 	@Override
 	public Map mapRow(ResultSet rs, int row) throws SQLException {
 		Map<String, Object> vo = Maps.newHashMap();
 		vo.put("server_id", rs.getInt("server_id"));
-		vo.put("server_name", rs.getString("server_name"));
 		vo.put("map_id", rs.getInt("map_id"));
 		vo.put("map_name", rs.getString("location"));
 		vo.put("parent_id", rs.getInt("parent_id"));
 		vo.put("depth", rs.getInt("depth"));
+		if (type.equals("TINY")) {
+			return vo;
+		}
+		vo.put("server_name", rs.getString("server_name"));
 		//		vo.put("sort_no", rs.getInt("sort_no"));
 		vo.put("profile_id", rs.getInt("idx"));
 		vo.put("profile_name", rs.getString("name"));

@@ -52,14 +52,20 @@ public class QueryUtil {
 			//	|| entry.getKey().equalsIgnoreCase("user_name")) {
 
 			if (StringUtils.contains(entry.getValue().toString(), "%")) {
-				if (StringUtils.contains(entry.getKey().toString(), "mac")) {
+				if (StringUtils.contains(entry.getKey().toString(), "sta") || StringUtils.contains(entry.getKey().toString(), "mac")
+						|| StringUtils.contains(entry.getKey().toString(), "bssid")) {
+					String value = entry.getValue().toString();
+					entry.setValue(value.replaceAll(":", ""));
 					sql += " HEX(" + entry.getKey() + ") LIKE :" + entry.getKey();
 				} else {
 					//entry.setValue("%" + entry.getValue() + "%");
 					sql += " " + entry.getKey() + " LIKE :" + entry.getKey();
 				}
 			} else {
-				if (StringUtils.contains(entry.getKey().toString(), "mac")) {
+				if (StringUtils.contains(entry.getKey().toString(), "sta") || StringUtils.contains(entry.getKey().toString(), "mac")
+						|| StringUtils.contains(entry.getKey().toString(), "bssid")) {
+					String value = entry.getValue().toString();
+					entry.setValue(value.replaceAll(":", ""));
 					sql += " HEX(" + entry.getKey() + ") = :" + entry.getKey();
 				} else {
 					sql += " " + entry.getKey() + " = :" + entry.getKey();

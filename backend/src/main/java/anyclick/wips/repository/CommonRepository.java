@@ -1,6 +1,7 @@
 package anyclick.wips.repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.google.common.collect.Maps;
 
 import anyclick.wips.config.AppProperties;
+import anyclick.wips.data.Enums.MapperType;
 import anyclick.wips.error.AuthException;
+import anyclick.wips.repository.mapper.MapMapper;
+import anyclick.wips.repository.mapper.ServerMapper;
 
 @Repository
 public class CommonRepository {
@@ -69,6 +73,18 @@ public class CommonRepository {
 		param.put("date", new Date().getTime());
 		param.put("comment", comment);
 		result = template.update(sql, param);
+		return result;
+	}
+
+	public List getServerList() {
+		String sql = "SELECT * FROM server_info_tbl ORDER BY name";
+		List result = template.query(sql, new ServerMapper(MapperType.TINY));
+		return result;
+	}
+
+	public List getMapList() {
+		String sql = "SELECT * FROM map_info_tbl ORDER BY depth, location";
+		List result = template.query(sql, new MapMapper("TINY"));
 		return result;
 	}
 }

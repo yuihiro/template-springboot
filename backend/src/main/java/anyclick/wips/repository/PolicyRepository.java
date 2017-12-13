@@ -107,7 +107,7 @@ public class PolicyRepository {
 		sql.append("LEFT JOIN server_info_tbl as server ");
 		sql.append("ON map.server_id = server.server_id ");
 		sql.append(query);
-		List result = template.query(sql.toString(), new MapMapper());
+		List result = template.query(sql.toString(), new MapMapper("NORMAL"));
 		return result;
 	}
 

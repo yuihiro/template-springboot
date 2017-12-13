@@ -51,14 +51,17 @@ public class PolicyService {
 		log.debug($param.toString());
 		long id = Long.parseLong($param.get("id").toString());
 		String name = $param.get("name").toString();
-		long command_id = repo.insertPolicyCommand(1, 1, 1, id, name);
+		int sub_type = Integer.parseInt($param.get("sub_type").toString());
+		long command_id = repo.insertPolicyCommand(1, sub_type, 1, id, name);
 		List<Map> details = (List) $param.get("map_lst");
 		for (Map item : details) {
 			item.put("command_id", command_id);
 		}
 		log.debug(details.toString());
 		repo.insertPolicyCommandDetail(details);
-		repo.updateMapFlag(details);
+		if (sub_type == 1) {
+			repo.updateMapFlag(details);
+		}
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 적용하였습니다.");
 		return command_id;
 	}
@@ -78,8 +81,8 @@ public class PolicyService {
 		if (except_lst.size() > 0) {
 			repo.insertPolicyExceptList(id, except_lst);
 		}
-		long command_id = repo.insertPolicyCommand(1, 3, 3, id, name);
-		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 추가하였습니다.");
+		//long command_id = repo.insertPolicyCommand(1, 3, 3, id, name);
+		//common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 추가하였습니다.");
 		return id;
 	}
 
@@ -100,26 +103,26 @@ public class PolicyService {
 		if (except_lst.size() > 0) {
 			repo.insertPolicyExceptList(id, except_lst);
 		}
-		long command_id = -1;
-		if ($param.get("map_lst") != null) {
-			command_id = repo.insertPolicyCommand(1, 2, 3, id, name);
-			List<Map> details = (List) $param.get("map_lst");
-			for (Map item : details) {
-				item.put("command_id", command_id);
-			}
-			log.debug(details.toString());
-			repo.insertPolicyCommandDetail(details);
-		}
+		//		long command_id = -1;
+		//		if ($param.get("map_lst") != null) {
+		//			command_id = repo.insertPolicyCommand(1, 2, 3, id, name);
+		//			List<Map> details = (List) $param.get("map_lst");
+		//			for (Map item : details) {
+		//				item.put("command_id", command_id);
+		//			}
+		//			log.debug(details.toString());
+		//			repo.insertPolicyCommandDetail(details);
+		//		}
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 수정하였습니다.");
-		return command_id;
+		return id;
 	}
 
 	public int deleteProfile(Map<String, Object> $param) {
 		long id = Long.parseLong($param.get("id").toString());
 		String name = $param.get("name").toString();
 		int result = repo.deleteProfile(id);
-		repo.insertPolicyCommand(1, 4, 3, id, name);
-		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 삭제하였습니다.");
+		//repo.insertPolicyCommand(1, 4, 3, id, name);
+		//common_repo.updateAdminLog(3, "정책프로파일(" + name + ")를 삭제하였습니다.");
 		return result;
 	}
 
