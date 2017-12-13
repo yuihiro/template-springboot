@@ -34,8 +34,8 @@ public class StatusService {
 		Map param = Maps.newHashMap();
 		param.put("start_time", start_time);
 		param.put("last_event_id", last_event_id);
-		param.put("offset", 0);
-		param.put("limit", 5);
+		//param.put("offset", 0);
+		//param.put("limit", 5);
 		List<Map> event_lst = repo.getStatusEventList(param);
 		if (event_lst.size() > 0) {
 			last_event_id = Long.parseLong(event_lst.get(0).get("id").toString());

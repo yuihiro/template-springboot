@@ -102,8 +102,8 @@ public class PolicyRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT *, server.name as server_name FROM map_info_tbl as map ");
 		sql.append("LEFT JOIN event_policy_profile_tbl as profile ");
-		//sql.append("ON map.profile_idx = profile.idx ");
-		sql.append("ON map.server_id = profile.server_id AND map.profile_idx = profile.server_profile_id ");
+		sql.append("ON map.profile_idx = profile.idx ");
+		//sql.append("ON map.server_id = profile.server_id AND map.profile_idx = profile.server_profile_id ");
 		sql.append("LEFT JOIN server_info_tbl as server ");
 		sql.append("ON map.server_id = server.server_id ");
 		sql.append(query);
@@ -279,6 +279,8 @@ public class PolicyRepository {
 		param.put("command_id", "");
 		param.put("server_id", "");
 		param.put("server_name", "");
+		param.put("map_id", "");
+		param.put("map_name", "");
 		String query = QueryUtil.getInsertQuery(param, null);
 		String sql = "INSERT INTO command_profile_tbl " + query;
 		int[] result = template.batchUpdate(sql, batch);
@@ -289,9 +291,20 @@ public class PolicyRepository {
 		return sum;
 	}
 
+	public int updateMapFlag(List<Map> $details) {
+		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch($details.toArray(new HashMap[$details.size()]));
+		String sql = "UPDATE map_info_tbl SET setflag = 2 WHERE map_id = :map_id AND server_id = :server_id";
+		int[] result = template.batchUpdate(sql, batch);
+		int sum = 0;
+		for (int item : result) {
+			sum += item;
+		}
+		return sum;
+	}
+
 	public List getPolicyCommandStatus(long $id) {
 		// 테스트용
-		updatePolicyCommandStatus($id);
+		//updatePolicyCommandStatus($id);
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("command_id", $id);
 		param.put("status", 3);
@@ -301,9 +314,9 @@ public class PolicyRepository {
 		return result;
 	}
 
+	// 테스트용
 	public int updatePolicyCommandStatus(long $id) {
 		long idx = template.queryForObject("SELECT id FROM command_profile_tbl WHERE status < 3 AND command_id = " + $id + " LIMIT 1", Maps.newHashMap(), Long.class);
-
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("command_id", $id);
 		param.put("status", 3);

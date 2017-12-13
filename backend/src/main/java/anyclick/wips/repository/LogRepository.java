@@ -87,7 +87,6 @@ public class LogRepository {
 		query += QueryUtil.getTimeQuery($param, "reg_time", true, query);
 		query += QueryUtil.getOrderQuery("reg_time desc");
 		query += QueryUtil.getLimitQuery($param);
-
 		String sql = "SELECT * FROM (SELECT * FROM command_tbl " + query + ") as command_tbl ";
 		sql += "LEFT JOIN ";
 		sql += "(SELECT command_id FROM command_profile_tbl GROUP BY command_id) AS command_profile_tbl ";

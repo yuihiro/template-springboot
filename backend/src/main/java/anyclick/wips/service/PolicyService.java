@@ -58,12 +58,13 @@ public class PolicyService {
 		}
 		log.debug(details.toString());
 		repo.insertPolicyCommandDetail(details);
+		repo.updateMapFlag(details);
 		common_repo.updateAdminLog(3, "정책프로파일(" + name + ")을 적용하였습니다.");
 		return command_id;
 	}
 
 	public long insertProfile(Map<String, Object> $param) {
-		log.info($param.toString());
+		log.debug($param.toString());
 		Map profile_info = (Map) $param.get("profile_info");
 		String name = profile_info.get("name").toString();
 		long id = repo.insertProfile(profile_info);

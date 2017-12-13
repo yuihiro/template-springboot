@@ -20,6 +20,7 @@ import com.google.common.collect.Maps;
 import anyclick.wips.data.Enums.MapperType;
 import anyclick.wips.repository.mapper.CommandMapper;
 import anyclick.wips.repository.mapper.EventCntMapper;
+import anyclick.wips.repository.mapper.EventMapper;
 import anyclick.wips.repository.mapper.ServerMapper;
 import anyclick.wips.util.QueryUtil;
 
@@ -136,18 +137,28 @@ public class ServerRepository {
 		return result;
 	}
 
-	public long getPolicyLogListCnt(Map<String, Object> $param) {
-		String sql = "SELECT COUNT(*) FROM command_profile_tbl WHERE server_id = :id";
+	public long getEventListCnt(Map<String, Object> $param) {
+		String sql = "SELECT COUNT(*) FROM event_tbl WHERE server_id = :id";
 		Long result = template.queryForObject(sql, $param, Long.class);
 		return result;
 	}
 
+	public List getEventList(Map<String, Object> $param) {
+		String query = QueryUtil.getOrderQuery("l_date desc");
+		query += QueryUtil.getLimitQuery($param);
+		String sql = "SELECT * FROM (SELECT * FROM event_tbl WHERE server_id = :server_id) as event_tbl ";
+		sql += "LEFT JOIN server_info_tbl ON event_tbl.server_id = server_info_tbl.server_id ";
+		sql += "LEFT JOIN map_info_tbl ON event_tbl.map_id = map_info_tbl.map_id " + query;
+		List result = template.query(sql, $param, new EventMapper());
+		return result;
+	}
+
 	public List getPolicyLogList(Map<String, Object> $param) {
-		String sql = "SELECT * FROM (SELECT * FROM command_profile_tbl WHERE server_id = :id ) AS command_profile_tbl ";
+		String query = QueryUtil.getOrderQuery("reg_time desc");
+		query += QueryUtil.getLimitQuery($param);
+		String sql = "SELECT * FROM (SELECT * FROM command_profile_tbl WHERE server_id = :server_id) AS command_profile_tbl ";
 		sql += "LEFT JOIN (SELECT id, type, sub_type, target, target_name from command_tbl) as command_tbl ";
 		sql += "ON command_profile_tbl.command_id = command_tbl.id ";
-		sql += "ORDER BY reg_time desc ";
-		sql += QueryUtil.getLimitQuery($param);
 		List result = template.query(sql, $param, new CommandMapper("SENSOR"));
 		return result;
 	}
