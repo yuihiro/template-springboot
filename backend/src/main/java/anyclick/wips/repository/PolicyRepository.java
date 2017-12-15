@@ -325,22 +325,34 @@ public class PolicyRepository {
 		return template.update(sql, param);
 	}
 
-	public List getApList() {
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM ap_mng_list WHERE server_id = 0");
-		List result = template.query(sql.toString(), new ApMapper());
+	public long getManageApListCnt() {
+		String sql = "SELECT COUNT(*) FROM ap_mng_list";
+		Long result = template.queryForObject(sql, Maps.newHashMap(), Long.class);
 		return result;
 	}
 
-	public List getStationList() {
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM sta_mng_list WHERE server_id = 0");
+	public List getManageApList(Map<String, Object> $param) {
+		String query = QueryUtil.getLimitQuery($param);
+		String sql = "SELECT * FROM ap_mng_list ORDER BY saved_time desc, bssid " + query;
+		List result = template.query(sql, $param, new ApMapper());
+		return result;
+	}
+
+	public long getManageStationListCnt() {
+		String sql = "SELECT COUNT(*) FROM sta_mng_list";
+		Long result = template.queryForObject(sql, Maps.newHashMap(), Long.class);
+		return result;
+	}
+
+	public List getManageStationList(Map<String, Object> $param) {
+		String query = QueryUtil.getLimitQuery($param);
+		String sql = "SELECT * FROM sta_mng_list ORDER BY reg_time desc, sta_mac " + query;
 		List result = template.query(sql.toString(), new StationMapper());
 		return result;
 	}
 
-	public long insertApList(List<Map<String, Object>> $param) {
-		template.update("DELETE FROM ap_mng_list WHERE server_id = 0", Maps.newHashMap());
+	public long insertApList(List<Map> $param) {
+		//template.update("DELETE FROM ap_mng_list WHERE server_id = 0", Maps.newHashMap());
 
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch($param.toArray(new HashMap[$param.size()]));
 		Map param = (Map) $param.get(0);
@@ -354,9 +366,8 @@ public class PolicyRepository {
 		return sum;
 	}
 
-	public long insertStationList(List<Map<String, Object>> $param) {
-		template.update("DELETE FROM sta_mng_list WHERE server_id = 0", Maps.newHashMap());
-
+	public long insertStationList(List<Map> $param) {
+		//template.update("DELETE FROM sta_mng_list WHERE server_id = 0", Maps.newHashMap());
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch($param.toArray(new HashMap[$param.size()]));
 		Map param = (Map) $param.get(0);
 		String query = QueryUtil.getInsertQuery(param, null);
@@ -367,6 +378,16 @@ public class PolicyRepository {
 			sum += item;
 		}
 		return sum;
+	}
+
+	public long deleteManageApList(List<String> $param) {
+		String sql = "DELETE FROM ap_mng_list WHERE bssid " + QueryUtil.getInQuery($param);
+		return template.update(sql, Maps.newHashMap());
+	}
+
+	public long deleteManageStationList(List<String> $param) {
+		String sql = "DELETE FROM sta_mng_list WHERE sta_mac " + QueryUtil.getInQuery($param);
+		return template.update(sql, Maps.newHashMap());
 	}
 
 	class sortCompare implements Comparator<Map> {

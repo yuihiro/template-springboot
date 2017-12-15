@@ -217,6 +217,19 @@ public class QueryUtil {
 		return sql;
 	}
 
+	static public String getInQuery(List<String> $param) {
+		String sql = "(";
+		int total = $param.size();
+		for (int i = 1; i <= total; i++) {
+			sql += $param.get(i - 1);
+			if (i != total) {
+				sql += ",";
+			}
+		}
+		sql += ")";
+		return " IN " + sql;
+	}
+
 	static public String getJoinQuery(Object $column, String $query) {
 		return (Util.isEmpty($column) == false) ? $query : "";
 	}

@@ -131,15 +131,39 @@ public class PolicyService {
 		return result;
 	}
 
-	public Map getClassifyData() {
-		Map result = Maps.newHashMap();
-		List server_lst = server_repo.getServerList(Maps.newHashMap());
-		List ap_lst = repo.getApList();
-		List station_lst = repo.getStationList();
-		result.put("server_lst", server_lst);
-		result.put("ap_lst", ap_lst);
-		result.put("station_lst", station_lst);
-		return result;
+	public long getManageApListCnt() {
+		return repo.getManageApListCnt();
+	}
+
+	public List<Map> getManageApList(Map<String, Object> $param) {
+		return repo.getManageApList($param);
+	}
+
+	public long getManageStationListCnt() {
+		return repo.getManageStationListCnt();
+	}
+
+	public List<Map> getManageStationList(Map<String, Object> $param) {
+		return repo.getManageStationList($param);
+	}
+
+	public long insertManageApList(List<Map> $param) {
+		return repo.insertApList($param);
+	}
+
+	public long insertManageStationList(List<Map> $param) {
+		for (Map item : $param) {
+			item.put("reg_time", System.currentTimeMillis());
+		}
+		return repo.insertStationList($param);
+	}
+
+	public long deleteManageApList(List<String> $param) {
+		return repo.deleteManageApList($param);
+	}
+
+	public long deleteManageStationList(List<String> $param) {
+		return repo.deleteManageStationList($param);
 	}
 
 	public long applyClassify(Map<String, Object> $param) {

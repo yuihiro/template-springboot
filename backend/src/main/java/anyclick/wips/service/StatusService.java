@@ -29,7 +29,10 @@ public class StatusService {
 		long last_event_id = Long.parseLong($param.get("last_event_id").toString());
 
 		Map result = Maps.newHashMap();
-		result.put("stats_data", repo.getStatsCnt($param));
+		Map stats_data = repo.getServerStatsCnt();
+		stats_data.put("manage_ap_cnt", repo.getManageApCnt());
+		stats_data.put("manage_sta_cnt", repo.getManageStationCnt());
+		result.put("stats_data", stats_data);
 		result.put("server_data", server_repo.getServerList(Maps.newHashMap()));
 		Map param = Maps.newHashMap();
 		param.put("start_time", start_time);

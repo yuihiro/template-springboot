@@ -47,7 +47,7 @@ public class CryptoUtil {
 	}
 
 	public static String decrypt(String text, String key) {
-		log.debug("decrypt : " + text + "/" + key);
+		//log.debug("decrypt : " + text + "/" + key);
 		String result = null;
 		if (ecipher == null) {
 			initCipher(key);

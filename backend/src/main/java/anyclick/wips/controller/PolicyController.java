@@ -54,10 +54,44 @@ public class PolicyController {
 		return service.processProfile(id);
 	}
 
-	// AP/단말분류관리
-	@PostMapping("getClassifyData")
-	public Map getClassifyData() {
-		return service.getClassifyData();
+	@PostMapping("getManageApListCnt")
+	public long getManageApListCnt(@RequestBody Map<String, Object> $param) {
+		return service.getManageApListCnt();
+	}
+
+	@PostMapping("getManageApList")
+	public List<Map> getManageApList(@RequestBody Map<String, Object> $param) {
+		return service.getManageApList($param);
+	}
+
+	@PostMapping("getManageStationListCnt")
+	public long getManageStationListCnt(@RequestBody Map<String, Object> $param) {
+		return service.getManageStationListCnt();
+	}
+
+	@PostMapping("getManageStationList")
+	public List<Map> getManageStationList(@RequestBody Map<String, Object> $param) {
+		return service.getManageStationList($param);
+	}
+
+	@PostMapping("insertManageApList")
+	public long insertManageApList(@RequestBody List<Map> $param) {
+		return service.insertManageApList($param);
+	}
+
+	@PostMapping("insertManageStationList")
+	public long insertManageStationList(@RequestBody List<Map> $param) {
+		return service.insertManageStationList($param);
+	}
+
+	@PostMapping("deleteManageApList")
+	public long deleteManageApList(@RequestBody List<String> $param) {
+		return service.deleteManageApList($param);
+	}
+
+	@PostMapping("deleteManageStationList")
+	public long deleteManageStationList(@RequestBody List<String> $param) {
+		return service.deleteManageStationList($param);
 	}
 
 	@PostMapping("applyClassify")
