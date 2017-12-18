@@ -27,6 +27,7 @@ public class MainController {
 	@PostMapping("login")
 	@AuthCheck()
 	public Map login(@RequestBody Map<String, Object> $param, HttpServletRequest $req) {
+		main_service.removeInvalideAdmin();
 		String id = $param.get("id").toString();
 		String pwd = $param.get("pwd").toString();
 		return main_service.login(id, pwd, $req);

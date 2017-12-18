@@ -42,6 +42,7 @@ public class AdminMapper implements RowMapper {
 		vo.put("email_pwd", rs.getString("email_pwd"));
 		vo.put("comment", Util.toHyphen(rs.getString("comment")));
 		vo.put("last_login", DateUtil.timeToStr(rs.getLong("last_login")));
+		vo.put("last_update", DateUtil.timeToStr(rs.getLong("last_update")));
 		return vo;
 	}
 }

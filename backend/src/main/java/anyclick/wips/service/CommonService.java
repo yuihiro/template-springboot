@@ -36,7 +36,7 @@ public class CommonService {
 			reader.close();
 			p.waitFor();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		if (p != null) {
 			p.destroy();

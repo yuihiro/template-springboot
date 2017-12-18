@@ -65,6 +65,17 @@ public class ConfigService {
 		return result;
 	}
 
+	public String checkBeforeLogin() {
+		String result = "";
+		Map config_info = repo.getConfig();
+
+		return result;
+	}
+
+	public Map getSystemConfig() {
+		return repo.getConfig();
+	}
+
 	public Map getConfig() {
 		Map result = Maps.newHashMap();
 		result.putAll(repo.getConfig());
@@ -89,7 +100,7 @@ public class ConfigService {
 			props.load(new FileInputStream(env_file));
 			mac = props.getProperty("HWADDR").toUpperCase();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		return mac;
 	}
@@ -99,7 +110,7 @@ public class ConfigService {
 		try {
 			ip = InetAddress.getLocalHost().getHostAddress();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		return ip;
 	}
@@ -111,7 +122,7 @@ public class ConfigService {
 			props.load(new FileInputStream(ntp_file));
 			ip = props.getProperty("NTP_SERVER");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		return ip;
 	}
@@ -137,7 +148,7 @@ public class ConfigService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		return result;
 	}

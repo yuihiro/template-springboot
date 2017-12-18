@@ -16,7 +16,7 @@ import com.google.common.collect.Maps;
 
 public class DateUtil {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(DateUtil.class);
 
 	public static SimpleDateFormat second_sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
@@ -35,6 +35,9 @@ public class DateUtil {
 	}
 
 	public static String timeToStr(Long time) {
+		if (time == 0) {
+			return "0";
+		}
 		Date date = new Date(time);
 		return second_sdf.format(date);
 	}

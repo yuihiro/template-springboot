@@ -24,7 +24,7 @@ public class ConfigMapper implements RowMapper {
 		vo.put("auto_lock", rs.getInt("auto_lock"));
 		vo.put("pwd_update", rs.getInt("pwd_update"));
 		vo.put("auto_backup", rs.getInt("autoBackup"));
-		vo.put("inited", rs.getBoolean("inited"));
+		vo.put("inited", rs.getInt("inited"));
 		vo.put("language", (rs.getString("language").equals("KOR")) ? 1 : 2);
 
 		vo.put("smtp_ip", Util.toEmpty(rs.getString("mail_ip")));

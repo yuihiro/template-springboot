@@ -15,7 +15,7 @@ public class AppProperties {
 	public static String buildTime;
 
 	public static final String INIT_ID = "anyclick";
-	public static final String INIT_PWD = "adminme00!";
+	public static final String INIT_PWD = "anyclick00!";
 	public static final String CRYOTO_KEY = "UNETANYANGEL";
 
 	public static String admin_crypto_key = "0123456789123456";
@@ -25,7 +25,7 @@ public class AppProperties {
 	public static String license_url = "/usr/local/blazeds/tomcat/webapps/anyclick_wips/uploadfile/license_file/";
 	public static String db_url = "/opt/backup/db/";
 
-	public static final int SESSION_TIMEOUT = 10 * 60;
+	public static final int SESSION_TIMEOUT = 30 * 60;
 
 	public void setName(String name) {
 		this.name = name;
