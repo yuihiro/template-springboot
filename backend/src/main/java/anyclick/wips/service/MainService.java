@@ -93,7 +93,7 @@ public class MainService {
 						// 중복접속
 						HttpSession exist = isExistAdmin($id);
 						if (exist != null) {
-							status = "DUPLICATE";
+							//status = "DUPLICATE";
 						}
 						// 로그인 실패(패스워드)					
 					} else {
@@ -175,9 +175,13 @@ public class MainService {
 	public void removeInvalideAdmin() {
 		log.info("REMOVE INVALIDE ADMIN");
 		for (HttpSession item : login_user_lst) {
-			if (item.getAttribute("id") == null) {
-				log.info("DELETE : " + item.getId());
-				login_user_lst.remove(item);
+			try {
+				if (item.getAttribute("id") == null) {
+					log.info("DELETE : " + item.getId());
+					login_user_lst.remove(item);
+				}
+			} catch (IllegalStateException e) {
+
 			}
 		}
 	}

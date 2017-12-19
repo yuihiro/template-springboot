@@ -32,7 +32,6 @@ public class LogRepository {
 	}
 
 	public List getEventList(Map<String, Object> $param) {
-		log.debug($param.toString());
 		if ($param.containsKey("server_id")) {
 			$param.put("event_tbl.server_id", $param.get("server_id"));
 		}

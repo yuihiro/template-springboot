@@ -98,7 +98,7 @@ public class ConfigService {
 		try {
 			Properties props = new Properties();
 			props.load(new FileInputStream(env_file));
-			mac = props.getProperty("HWADDR").toUpperCase();
+			mac = props.getProperty("HWADDR").toUpperCase().trim();
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
