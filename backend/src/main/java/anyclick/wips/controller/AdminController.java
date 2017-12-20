@@ -48,4 +48,10 @@ public class AdminController {
 		String id = $param.get("id").toString();
 		return service.deleteAdmin(id);
 	}
+
+	@PostMapping("updateAdminPassword")
+	public int updateAdminPassword(@RequestBody Map<String, Object> $param) {
+		return service.updateAdminPassword($param);
+	}
+
 }

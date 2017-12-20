@@ -300,6 +300,20 @@ public class ConfigService {
 		return result;
 	}
 
+	public int updateInitConfig(Map<String, Object> $param) {
+		$param.put("last_update", System.currentTimeMillis() / 1000);
+		String id = $param.get("user_id").toString();
+		admin_repo.deleteAdmin(id);
+		admin_repo.deleteAdmin(0);
+		admin_repo.insertAdmin($param);
+		Map param = Maps.newHashMap();
+		param.put("inited", 1);
+		repo.updateConfig(param);
+		common_repo.updateAdminLog(3, "로그생성기능을 시작하였습니다.");
+		common_repo.updateAdminLog(3, "초기설정을 저장하였습니다.");
+		return 1;
+	}
+
 	//	String rpm_name = "";
 	//	DefaultExecutor executor = new DefaultExecutor();
 	//	ByteArrayOutputStream baos = new ByteArrayOutputStream();

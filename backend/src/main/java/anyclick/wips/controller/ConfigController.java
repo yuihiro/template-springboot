@@ -33,4 +33,9 @@ public class ConfigController {
 	public int updateConfig(@RequestBody Map<String, Object> $param) {
 		return service.updateConfig($param);
 	}
+
+	@PostMapping("updateInitConfig")
+	public int updateInitConfig(@RequestBody Map<String, Object> $param) {
+		return service.updateInitConfig($param);
+	}
 }

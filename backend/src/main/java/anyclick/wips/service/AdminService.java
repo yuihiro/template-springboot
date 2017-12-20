@@ -33,20 +33,32 @@ public class AdminService {
 	}
 
 	public int insertAdmin(Map<String, Object> $param) {
+		$param.put("last_update", System.currentTimeMillis() / 1000);
 		int result = repo.insertAdmin($param);
-		common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 추가하였습니다.");
+		common_repo.updateAdminLog(3, "관리자계정(" + $param.get("user_id").toString() + ")를 추가하였습니다.");
 		return result;
 	}
 
 	public int updateAdmin(Map<String, Object> $param) {
+		if ($param.get("is_pwd") != null) {
+			$param.put("last_update", System.currentTimeMillis() / 1000);
+		}
 		int result = repo.updateAdmin($param);
-		common_repo.updateAdminLog(3, "관리자(" + $param.get("user_id").toString() + ")를 수정하였습니다.");
+		common_repo.updateAdminLog(3, "관리자계정(" + $param.get("user_id").toString() + ")를 수정하였습니다.");
 		return result;
 	}
 
 	public int deleteAdmin(String $id) {
 		int result = repo.deleteAdmin($id);
-		common_repo.updateAdminLog(3, "관리자(" + $id + ")를 삭제하였습니다.");
+		common_repo.updateAdminLog(3, "관리자계정(" + $id + ")를 삭제하였습니다.");
 		return result;
 	}
+
+	public int updateAdminPassword(Map<String, Object> $param) {
+		$param.put("last_update", System.currentTimeMillis() / 1000);
+		repo.updateAdmin($param);
+		common_repo.updateAdminLog(3, "비밀번호를 변경하였습니다.");
+		return 1;
+	}
+
 }

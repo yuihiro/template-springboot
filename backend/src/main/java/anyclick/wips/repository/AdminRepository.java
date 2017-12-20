@@ -56,10 +56,11 @@ public class AdminRepository {
 	public int updateAdmin(Map<String, Object> $param) {
 		List<String> except = new ArrayList();
 		except.add("idx");
+		except.add("is_pwd");
 		String sql = "";
 		String query = "";
 		query = QueryUtil.getUpdateQuery($param, except);
-		sql = "UPDATE admin_user_tbl SET " + query + " WHERE user_idx = :idx";
+		sql = "UPDATE admin_user_tbl SET " + query + " WHERE user_id = :user_id";
 		return template.update(sql, $param);
 	}
 
@@ -67,6 +68,15 @@ public class AdminRepository {
 		Map<String, Object> param = Maps.newHashMap();
 		param.put("user_id", $id);
 		String sql = "DELETE FROM admin_user_tbl WHERE user_id = :user_id";
+		int result = 0;
+		result = template.update(sql, param);
+		return result;
+	}
+
+	public int deleteAdmin(int $type) {
+		Map<String, Object> param = Maps.newHashMap();
+		param.put("type", $type);
+		String sql = "DELETE FROM admin_user_tbl WHERE admin_kinds = :type";
 		int result = 0;
 		result = template.update(sql, param);
 		return result;

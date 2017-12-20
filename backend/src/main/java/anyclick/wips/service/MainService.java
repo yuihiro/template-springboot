@@ -52,7 +52,7 @@ public class MainService {
 		int auto_logout = Integer.parseInt(config_data.get("auto_logout").toString());
 		String status = "SUCCESS";
 		// 초기 접속 
-		if (inited == 1 && $id.equals(AppProperties.INIT_ID) && pwd.equals(AppProperties.INIT_PWD)) {
+		if (inited == 0 && $id.equals(AppProperties.INIT_ID) && pwd.equals(AppProperties.INIT_PWD)) {
 			login_data = Maps.newHashMap();
 			login_data.put("id", $id);
 			login_data.put("pwd", pwd);
@@ -87,6 +87,7 @@ public class MainService {
 								long diff = epoch - last_update;
 								if (diff / (24 * 60 * 60) >= pwd_update) {
 									status = "PWD_UPDATE";
+									main_repo.updateAdminLoginTryCnt($id, 0);
 								}
 							}
 						}
@@ -124,6 +125,11 @@ public class MainService {
 			main_repo.updateAdminLoginTryCnt($id, 0);
 			main_repo.updateDatabase();
 			app_data = config_service.getAppData();
+
+			Map param = Maps.newHashMap();
+			param.put("user_id", login_data.get("id"));
+			param.put("last_login", System.currentTimeMillis() / 1000);
+			admin_repo.updateAdmin(param);
 		}
 		Map result = Maps.newHashMap();
 		result.put("login_data", login_data);
